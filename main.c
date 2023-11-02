@@ -142,6 +142,7 @@ void cadastrarIndustria() {
     // Salvando os dados da empresa em um arquivo (A empresa)
     int chave = 3;
     criptografar(industria.cpfResponsavel, chave);
+    
     FILE *arquivo = fopen("../data/industrias.txt", "a");
     fprintf(arquivo, "*-*-*-*-*-*-*-*--*-*-*-*-*-*-*-*-*-*-*-*-*\n");
     fprintf(arquivo, "Nome: %s\n", industria.nome);
