@@ -1,31 +1,46 @@
 #include <stdio.h>
 #include <string.h>
 
-// Função de criptografia simples usando deslocamento
-void criptografar(char *texto, int chave) {
-    for (int i = 0; texto[i] != '\0'; i++) {
-        texto[i] = texto[i] + chave; // Deslocamento da chave
-    }
-}
+// Defina macros para as cores
+#define RESET_COLOR "\x1b[0m"
+#define RED "\x1b[31m"
+#define GREEN "\x1b[32m"
+#define YELLOW "\x1b[33m"
+#define BLUE "\x1b[34m"
 
-// Função de descriptografia
-void descriptografar(char *texto, int chave) {
-    for (int i = 0; texto[i] != '\0'; i++) {
-        texto[i] = texto[i] - chave; // Deslocamento inverso da chave
-    }
-}
+struct Industria {
+    char nome[50];
+    char nomeFantasia[50];
+    char cnpj[15];
+    char email[50];
+    char telefone[15];
+    char dataAbertura[10];
+    char cpfResponsavel[50];
+
+    struct Endereco {
+        char rua[50];
+        char numero[10];
+        char bairro[50];
+        char cidade[50];
+        char estado[50];
+        char cep[10];
+    } endereco;
+
+    // Outros campos de informações da indústria
+} industria;
 
 int main() {
-    char texto[] = "456789:;<34";
-    int chave = 3; // Chave de deslocamento (pode ser qualquer número)
 
-    printf("Texto original: %s\n", texto);
+    printf(GREEN "[?] - Nome da Empresa: " RESET_COLOR);
+    scanf("%s", industria.nome);
+    char caminhoArquivo[100];
+    sprintf(caminhoArquivo, "../data/industria_%s.txt", industria.nome);
 
-    criptografar(texto, chave);
-    printf("Texto criptografado: %s\n", texto);
-
-    descriptografar(texto, chave);
-    printf("Texto descriptografado: %s\n", texto);
-
+    FILE *arquivo = fopen(caminhoArquivo, "a");
+    fprintf(arquivo, "%s\n", industria.nome);
+    fclose(arquivo);
+    printf("\n");
+    printf(GREEN "[!] - Industria cadastrada com sucesso!\n" RESET_COLOR);
+    
     return 0;
 }

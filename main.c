@@ -33,6 +33,12 @@ void criptografar(char *texto, int chave) {
     }
 }
 
+void descriptografar(char *texto, int chave) {
+    for (int i = 0; texto[i] != '\0'; i++) {
+        texto[i] = texto[i] - chave; // Deslocamento inverso da chave
+    }
+}
+
 // Estrutura para armazenar informações da indústria
 struct Industria {
     char nome[50];
@@ -94,10 +100,12 @@ void cadastrarIndustria() {
     // Dados da empresa
     printf(GREEN "[?] - CNPJ: " RESET_COLOR);
     scanf("%s", industria.cnpj);
+    char caminhoArquivo[100];
+    sprintf(caminhoArquivo, "../data/industrias/industria_%s.txt", industria.cnpj);
 
     printf(GREEN "[?] - Nome da Empresa: " RESET_COLOR);
     scanf("%s", industria.nome);
-
+    
     printf(GREEN "[?] - Nome Fantasia: " RESET_COLOR);
     scanf("%s", industria.nomeFantasia);
 
@@ -110,9 +118,9 @@ void cadastrarIndustria() {
     printf(GREEN "[?] - Email: " RESET_COLOR);
     scanf("%s", industria.email);
 
-   
+
     imprimirLinhaCentralizada(GREEN " ENDERECO DA EMPRESA " RESET_COLOR);
-    
+
     // Dados da empresa (Endereço)
     printf(GREEN "[?] - Rua: " RESET_COLOR);
     scanf("%s", industria.endereco.rua);
@@ -131,34 +139,47 @@ void cadastrarIndustria() {
 
     printf(GREEN "[?] - CEP: " RESET_COLOR);
     scanf("%s", industria.endereco.cep);
-    
+
     printf("\n");
     imprimirLinhaCentralizada(GREEN " DADOS DO RESPONSAVEL " RESET_COLOR);
 
     // Dados do responsável
     printf(GREEN "[?] - CPF do Responsavel: " RESET_COLOR);
     scanf("%s", industria.cpfResponsavel);
-    
+
     // Salvando os dados da empresa em um arquivo (A empresa)
     int chave = 3;
+    criptografar(industria.cnpj, chave);
+    criptografar(industria.nome, chave);
+    criptografar(industria.nomeFantasia, chave);
+    criptografar(industria.dataAbertura, chave);
+    criptografar(industria.telefone, chave);
+    criptografar(industria.email, chave);
+    criptografar(industria.endereco.rua, chave);
+    criptografar(industria.endereco.numero, chave);
+    criptografar(industria.endereco.bairro, chave);
+    criptografar(industria.endereco.cidade, chave);
+    criptografar(industria.endereco.estado, chave);
+    criptografar(industria.endereco.cep, chave);
     criptografar(industria.cpfResponsavel, chave);
-    
-    FILE *arquivo = fopen("../data/industrias.txt", "a");
-    fprintf(arquivo, "*-*-*-*-*-*-*-*--*-*-*-*-*-*-*-*-*-*-*-*-*\n");
-    fprintf(arquivo, "Nome: %s\n", industria.nome);
-    fprintf(arquivo, "Nome Fantasia: %s\n", industria.nomeFantasia);
-    fprintf(arquivo, "CNPJ: %s\n", industria.cnpj);
-    fprintf(arquivo, "Email: %s\n", industria.email);
-    fprintf(arquivo, "Telefone: %s\n", industria.telefone);
-    fprintf(arquivo, "Data de Abertura: %s\n", industria.dataAbertura);
-    fprintf(arquivo, "Rua: %s\n", industria.endereco.rua);
-    fprintf(arquivo, "Numero: %s\n", industria.endereco.numero);
-    fprintf(arquivo, "Bairro: %s\n", industria.endereco.bairro);
-    fprintf(arquivo, "Cidade: %s\n", industria.endereco.cidade);
-    fprintf(arquivo, "Estado: %s\n", industria.endereco.estado);
-    fprintf(arquivo, "CEP: %s\n", industria.endereco.cep);
-    fprintf(arquivo, "CPF do Responsavel: %s\n", industria.cpfResponsavel);
+
+    FILE *arquivo = fopen(caminhoArquivo, "a");
+    fprintf(arquivo, "%s\n", industria.cnpj);
+    fprintf(arquivo, "%s\n", industria.nome);
+    fprintf(arquivo, "%s\n", industria.nomeFantasia);
+    fprintf(arquivo, "%s\n", industria.email);
+    fprintf(arquivo, "%s\n", industria.telefone);
+    fprintf(arquivo, "%s\n", industria.dataAbertura);
+    fprintf(arquivo, "%s\n", industria.endereco.rua);
+    fprintf(arquivo, "%s\n", industria.endereco.numero);
+    fprintf(arquivo, "%s\n", industria.endereco.bairro);
+    fprintf(arquivo, "%s\n", industria.endereco.cidade);
+    fprintf(arquivo, "%s\n", industria.endereco.estado);
+    fprintf(arquivo, "%s\n", industria.endereco.cep);
+    fprintf(arquivo, "%s\n", industria.cpfResponsavel);
     fclose(arquivo);
+    printf("\n");
+    printf(GREEN "[!] - Industria cadastrada com sucesso!\n" RESET_COLOR);
 }
 
 // Função para gerar relatórios
@@ -206,8 +227,80 @@ void cadastrarFuncionario() {
 }
 
 void consultarEmpresa() {
-    // Consultar empresa (implementação necessária)
+    char procurarCNPJ[15];
+    char nomeArquivo[100];
+    int chave = 3;
+    
+    imprimirLinhaCentralizada(GREEN " CONSULTA DE EMPRESA " RESET_COLOR);
+
+    printf("[?] - CNPJ da Empresa: ");
+    scanf("%s", procurarCNPJ);
+
+    // Construindo o nome do arquivo com base no CNPJ
+    sprintf(nomeArquivo, "../data/industrias/industria_%s.txt", procurarCNPJ);
+
+    // Abrindo o arquivo para leitura
+    FILE *arquivo = fopen(nomeArquivo, "r");
+
+    if (arquivo == NULL) {
+        printf("\n");
+        printf(RED "[!] - Erro ao abrir o arquivo ou a empresa nao foi encontrada.\n" RESET_COLOR);
+        return;
+    }
+
+    // Criando uma instância da estrutura para armazenar os dados
+    struct Industria minhaIndustria;
+
+    // Lendo os dados do arquivo, descriptografando e imprimindo na tela
+    while (fscanf(arquivo, "%s", minhaIndustria.cnpj) != EOF) {
+        descriptografar(minhaIndustria.cnpj, chave);
+        fscanf(arquivo, "%s", minhaIndustria.nome);
+        descriptografar(minhaIndustria.nome, chave);
+        fscanf(arquivo, "%s", minhaIndustria.nomeFantasia);
+        descriptografar(minhaIndustria.nomeFantasia, chave);
+        fscanf(arquivo, "%s", minhaIndustria.email);
+        descriptografar(minhaIndustria.email, chave);
+        fscanf(arquivo, "%s", minhaIndustria.telefone);
+        descriptografar(minhaIndustria.telefone, chave);
+        fscanf(arquivo, "%s", minhaIndustria.dataAbertura);
+        descriptografar(minhaIndustria.dataAbertura, chave);
+        fscanf(arquivo, "%s", minhaIndustria.endereco.rua);
+        descriptografar(minhaIndustria.endereco.rua, chave);
+        fscanf(arquivo, "%s", minhaIndustria.endereco.numero);
+        descriptografar(minhaIndustria.endereco.numero, chave);
+        fscanf(arquivo, "%s", minhaIndustria.endereco.bairro);
+        descriptografar(minhaIndustria.endereco.bairro, chave);
+        fscanf(arquivo, "%s", minhaIndustria.endereco.cidade);
+        descriptografar(minhaIndustria.endereco.cidade, chave);
+        fscanf(arquivo, "%s", minhaIndustria.endereco.estado);
+        descriptografar(minhaIndustria.endereco.estado, chave);
+        fscanf(arquivo, "%s", minhaIndustria.endereco.cep);
+        descriptografar(minhaIndustria.endereco.cep, chave);
+        fscanf(arquivo, "%s", minhaIndustria.cpfResponsavel);
+        descriptografar(minhaIndustria.cpfResponsavel, chave);
+
+        // Imprimindo os dados
+        printf("CNPJ: %s\n", minhaIndustria.cnpj);
+        printf("Nome: %s\n", minhaIndustria.nome);
+        printf("Nome Fantasia: %s\n", minhaIndustria.nomeFantasia);
+        printf("Email: %s\n", minhaIndustria.email);
+        printf("Telefone: %s\n", minhaIndustria.telefone);
+        printf("Data de Abertura: %s\n", minhaIndustria.dataAbertura);
+        printf("Rua: %s\n", minhaIndustria.endereco.rua);
+        printf("Numero: %s\n", minhaIndustria.endereco.numero);
+        printf("Bairro: %s\n", minhaIndustria.endereco.bairro);
+        printf("Cidade: %s\n", minhaIndustria.endereco.cidade);
+        printf("Estado: %s\n", minhaIndustria.endereco.estado);
+        printf("CEP: %s\n", minhaIndustria.endereco.cep);
+        printf("CPF do Responsavel: %s\n", minhaIndustria.cpfResponsavel);
+
+        printf("\n");
+    }
+
+    // Fechando o arquivo
+    fclose(arquivo);
 };
+
 
 int main() {
     if (realizarLogin()) {
@@ -238,10 +331,10 @@ int main() {
                     consultarEmpresa();
                     break;
                 case 5:
-                    printf("SISTEMA ENCERRADO!\n");
+                    printf(RED "[!] - SISTEMA ENCERRADO!\n" RESET_COLOR);
                     return 0;
                 default:
-                    printf("Opção invalida. Tente novamente.\n");
+                    printf(RED "[!] - Opção invalida. Tente novamente.\n" RESET_COLOR);
             }
         }
     } else {
