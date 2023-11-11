@@ -7,10 +7,12 @@
 #define GREEN "\x1b[32m"
 #define YELLOW "\x1b[33m"
 #define BLUE "\x1b[34m"
+char login[50];
+char senha[50];
 
 // Função para imprimir linha centralizada com asteriscos
 void imprimirLinhaCentralizada(const char *texto) {
-    int larguraTotal = 50; // Largura total da linha (ajuste conforme necessário)
+    int larguraTotal = 60; 
     int tamanhoTexto = strlen(texto);
     int margemEsquerda = (larguraTotal - tamanhoTexto) / 2;
 
@@ -67,43 +69,46 @@ struct Funcionario {
     char cpf[15];
     char email[50];
     char telefone[15];
-    char dataNascimento[10];
+    char dataNascimento[15];
     char cargo[50];
     char setor[50];
-    char dataAdmissao[10];
-    char dataDemissao[10];
-    char salario[10];
-    char status[10];
+    char dataAdmissao[15];
+    char dataDemissao[15];
+    char salario[15];
+    char status[15];
 } funcionario;
 
 // Função para realizar o login
 int realizarLogin() {
-    char usuario[50];
-    char senha[50];
-
     printf("\n");
     imprimirLinhaCentralizada(GREEN " SISTEMA DE GESTAO AMBIENTAL " RESET_COLOR);
 
     printf(GREEN "[?] - Usuario: " RESET_COLOR);
-    scanf("%s", usuario);
+    scanf("%s", login);
     printf(GREEN "[?] - Senha: " RESET_COLOR);
     scanf("%s", senha);
 
-    // Verificar o login e senha no sistema (implementação necessária)
-    // Se login for bem-sucedido, retorne 1; caso contrário, retorne 0
-    return 1; // Simulando login bem-sucedido
+    if (strcmp(login, "admin") == 0 && strcmp(senha, "1533") == 0) {
+        printf("\n");
+        printf(GREEN "[!] - Login realizado com sucesso!\n" RESET_COLOR);
+        return 1;
+    } else {
+        printf("\n");
+        printf(RED "[!] - Login ou senha incorretos. Tente novamente.\n" RESET_COLOR);
+        return 0;
+    }
 }
 
 // Função para cadastrar uma indústria
 void cadastrarIndustria() {
     int chave = 3;
+    char caminhoArquivo[100];
 
     imprimirLinhaCentralizada(GREEN " CADASTRO DE INDUSTRIA " RESET_COLOR);
 
     // Dados da empresa
     printf(GREEN "[?] - CNPJ: " RESET_COLOR);
     scanf("%s", industria.cnpj);
-    char caminhoArquivo[100];
     sprintf(caminhoArquivo, "../data/industrias/industria_%s.txt", industria.cnpj);
 
     printf(GREEN "[?] - Nome da Empresa: " RESET_COLOR);
@@ -190,11 +195,15 @@ void gerarRelatorio() {
 }
 
 void cadastrarFuncionario() {
+    char caminhoArquivo[100];
+    int chave = 3;
+
     imprimirLinhaCentralizada(GREEN " CADASTRO DE FUNCIONARIO " RESET_COLOR);
 
     // Dados do funcionario
     printf(GREEN "[?] - Nome: " RESET_COLOR);
     scanf("%s", funcionario.nome);
+    sprintf(caminhoArquivo, "../data/funcionarios/funcionario_%s.txt", funcionario.nome);
 
     printf(GREEN "[?] - CPF: " RESET_COLOR);
     scanf("%s", funcionario.cpf);
@@ -211,9 +220,6 @@ void cadastrarFuncionario() {
     printf(GREEN "[?] - Cargo: " RESET_COLOR);
     scanf("%s", funcionario.cargo);
 
-    printf(GREEN "[?] - Setor: " RESET_COLOR);
-    scanf("%s", funcionario.setor);
-
     printf(GREEN "[?] - Data de Admissao: " RESET_COLOR);
     scanf("%s", funcionario.dataAdmissao);
 
@@ -226,7 +232,111 @@ void cadastrarFuncionario() {
     printf(GREEN "[?] - Status: " RESET_COLOR);
     scanf("%s", funcionario.status);
 
+    // Cripitografando os dados do funcionario
+    cifraCesar(funcionario.nome, chave);
+    cifraCesar(funcionario.cpf, chave);
+    cifraCesar(funcionario.dataNascimento, chave);
+    cifraCesar(funcionario.telefone, chave);
+    cifraCesar(funcionario.email, chave);
+    cifraCesar(funcionario.cargo, chave);
+    cifraCesar(funcionario.dataAdmissao, chave);
+    cifraCesar(funcionario.dataDemissao, chave);
+    cifraCesar(funcionario.salario, chave);
+    cifraCesar(funcionario.status, chave);
+    
+    // Salvando os dados do funcionario em um arquivo (A empresa)
+    FILE *arquivo = fopen(caminhoArquivo, "a");
+    fprintf(arquivo, "%s\n", funcionario.nome);
+    fprintf(arquivo, "%s\n", funcionario.cpf);
+    fprintf(arquivo, "%s\n", funcionario.dataNascimento);
+    fprintf(arquivo, "%s\n", funcionario.telefone);
+    fprintf(arquivo, "%s\n", funcionario.email);
+    fprintf(arquivo, "%s\n", funcionario.cargo);
+    fprintf(arquivo, "%s\n", funcionario.dataAdmissao);
+    fprintf(arquivo, "%s\n", funcionario.dataDemissao);
+    fprintf(arquivo, "%s\n", funcionario.salario);
+    fprintf(arquivo, "%s\n", funcionario.status);
+    fclose(arquivo);
+    printf("\n");
+
+    printf(GREEN "[!] - Funcionario cadastrado com sucesso!\n" RESET_COLOR);
 }
+
+void consultarFuncionario(){
+    char procurarNome[50];
+    char nomeArquivo[100];
+    int chave = 3;
+    
+    imprimirLinhaCentralizada(GREEN " CONSULTA DE FUNCIONARIO " RESET_COLOR);
+
+    printf(GREEN "[?] - Nome do Funcionario: " RESET_COLOR);
+    scanf("%s", procurarNome);
+
+    // Construindo o nome do arquivo com base no nome
+    sprintf(nomeArquivo, "../data/funcionarios/funcionario_%s.txt", procurarNome);
+
+    // Abrindo o arquivo para leitura
+    FILE *arquivo = fopen(nomeArquivo, "r");
+
+    if (arquivo == NULL) {
+        printf("\n");
+        printf(RED "[!] - Erro ao abrir o arquivo ou o funcionario nao foi encontrado.\n" RESET_COLOR);
+        return;
+    }
+
+    // Criando uma instância da estrutura para armazenar os dados
+    struct Funcionario meuFuncionario;
+
+    // Lendo os dados do arquivo e armazenando temporariamente
+    while (fscanf(arquivo, "%s", meuFuncionario.nome) != EOF) {
+        decifraCesar(meuFuncionario.nome, chave);
+
+        fscanf(arquivo, "%s", meuFuncionario.cpf);
+        decifraCesar(meuFuncionario.cpf, chave);
+
+        fscanf(arquivo, "%s", meuFuncionario.dataNascimento);
+        decifraCesar(meuFuncionario.dataNascimento, chave);
+
+        fscanf(arquivo, "%s", meuFuncionario.telefone);
+        decifraCesar(meuFuncionario.telefone, chave);
+
+        fscanf(arquivo, "%s", meuFuncionario.email);
+        decifraCesar(meuFuncionario.email, chave);
+
+        fscanf(arquivo, "%s", meuFuncionario.cargo);
+        decifraCesar(meuFuncionario.cargo, chave);
+
+        fscanf(arquivo, "%s", meuFuncionario.dataAdmissao);
+        decifraCesar(meuFuncionario.dataAdmissao, chave);
+
+        fscanf(arquivo, "%s", meuFuncionario.dataDemissao);
+        decifraCesar(meuFuncionario.dataDemissao, chave);
+
+        fscanf(arquivo, "%s", meuFuncionario.salario);
+        decifraCesar(meuFuncionario.salario, chave);
+
+        fscanf(arquivo, "%s", meuFuncionario.status);   
+        decifraCesar(meuFuncionario.status, chave);
+}
+
+        // Imprimindo os dados
+        printf("Nome: %s\n", meuFuncionario.nome);
+        printf("CPF: %s\n", meuFuncionario.cpf);
+        printf("Data de Nascimento: %s\n", meuFuncionario.dataNascimento);
+        printf("Telefone: %s\n", meuFuncionario.telefone);
+        printf("Email: %s\n", meuFuncionario.email);
+        printf("Cargo: %s\n", meuFuncionario.cargo);
+        printf("Data de Admissao: %s\n", meuFuncionario.dataAdmissao);
+        printf("Data de Demissao: %s\n", meuFuncionario.dataDemissao);
+        printf("Salario: %s\n", meuFuncionario.salario);
+        printf("Status: %s\n", meuFuncionario.status);
+
+        printf("\n");
+    
+    // Fechando o arquivo
+    fclose(arquivo);
+    
+};
 
 void consultarEmpresa() {
     char procurarCNPJ[15];
@@ -235,7 +345,7 @@ void consultarEmpresa() {
     
     imprimirLinhaCentralizada(GREEN " CONSULTA DE EMPRESA " RESET_COLOR);
 
-    printf("[?] - CNPJ da Empresa: ");
+    printf(GREEN "[?] - CNPJ da Empresa: " RESET_COLOR);
     scanf("%s", procurarCNPJ);
 
     // Construindo o nome do arquivo com base no CNPJ
@@ -326,8 +436,9 @@ int main() {
             printf(RED "(1) - " GREEN "Cadastrar Industria\n" RESET_COLOR);
             printf(RED "(2) - " GREEN "Gerar Relatorio\n" RESET_COLOR);
             printf(RED "(3) - " GREEN "Cadastrar Funcionario\n" RESET_COLOR);
-            printf(RED "(4) - " GREEN "Consultar Empresa\n" RESET_COLOR);
-            printf(RED "(5) - " GREEN "Sair\n" RESET_COLOR);
+            printf(RED "(4) - " GREEN "Consultar Funcionario\n" RESET_COLOR);
+            printf(RED "(5) - " GREEN "Consultar Empresa\n" RESET_COLOR);
+            printf(RED "(6) - " GREEN "Sair\n" RESET_COLOR);
             printf(GREEN "[?] - Escolha uma opcao: " RESET_COLOR);
             scanf("%d", &opcao);
             printf("\n");
@@ -343,9 +454,12 @@ int main() {
                     cadastrarFuncionario();
                     break;
                 case 4:
-                    consultarEmpresa();
+                    consultarFuncionario();
                     break;
                 case 5:
+                    consultarEmpresa();
+                    break;
+                case 6:
                     printf(RED "[!] - SISTEMA ENCERRADO!\n" RESET_COLOR);
                     return 0;
                 default:
