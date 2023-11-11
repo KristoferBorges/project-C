@@ -27,17 +27,18 @@ void imprimirLinhaCentralizada(const char *texto) {
     printf("\n");
 }
 
-void criptografar(char *texto, int chave) {
+void cifraCesar(char *texto, char chave) {
     for (int i = 0; texto[i] != '\0'; i++) {
-        texto[i] = texto[i] + chave; // Deslocamento da chave
+        texto[i] = texto[i] ^ chave; // Operação XOR para criptografia
     }
 }
 
-void descriptografar(char *texto, int chave) {
+void decifraCesar(char *texto, char chave) {
     for (int i = 0; texto[i] != '\0'; i++) {
-        texto[i] = texto[i] - chave; // Deslocamento inverso da chave
+        texto[i] = texto[i] ^ chave; // Operação XOR para descriptografia
     }
 }
+
 
 // Estrutura para armazenar informações da indústria
 struct Industria {
@@ -46,7 +47,7 @@ struct Industria {
     char cnpj[15];
     char email[50];
     char telefone[15];
-    char dataAbertura[10];
+    char dataAbertura[15];
     char cpfResponsavel[50];
 
     struct Endereco {
@@ -55,7 +56,7 @@ struct Industria {
         char bairro[50];
         char cidade[50];
         char estado[50];
-        char cep[10];
+        char cep[15];
     } endereco;
 
     // Outros campos de informações da indústria
@@ -95,6 +96,8 @@ int realizarLogin() {
 
 // Função para cadastrar uma indústria
 void cadastrarIndustria() {
+    int chave = 3;
+
     imprimirLinhaCentralizada(GREEN " CADASTRO DE INDUSTRIA " RESET_COLOR);
 
     // Dados da empresa
@@ -148,20 +151,19 @@ void cadastrarIndustria() {
     scanf("%s", industria.cpfResponsavel);
 
     // Salvando os dados da empresa em um arquivo (A empresa)
-    int chave = 3;
-    criptografar(industria.cnpj, chave);
-    criptografar(industria.nome, chave);
-    criptografar(industria.nomeFantasia, chave);
-    criptografar(industria.dataAbertura, chave);
-    criptografar(industria.telefone, chave);
-    criptografar(industria.email, chave);
-    criptografar(industria.endereco.rua, chave);
-    criptografar(industria.endereco.numero, chave);
-    criptografar(industria.endereco.bairro, chave);
-    criptografar(industria.endereco.cidade, chave);
-    criptografar(industria.endereco.estado, chave);
-    criptografar(industria.endereco.cep, chave);
-    criptografar(industria.cpfResponsavel, chave);
+    cifraCesar(industria.cnpj, chave);
+    cifraCesar(industria.nome, chave);
+    cifraCesar(industria.nomeFantasia, chave);
+    cifraCesar(industria.email, chave);
+    cifraCesar(industria.telefone, chave);
+    cifraCesar(industria.dataAbertura, chave);
+    cifraCesar(industria.cpfResponsavel, chave);
+    cifraCesar(industria.endereco.rua, chave);
+    cifraCesar(industria.endereco.numero, chave);
+    cifraCesar(industria.endereco.bairro, chave);
+    cifraCesar(industria.endereco.cidade, chave);
+    cifraCesar(industria.endereco.estado, chave);
+    cifraCesar(industria.endereco.cep, chave);
 
     FILE *arquivo = fopen(caminhoArquivo, "a");
     fprintf(arquivo, "%s\n", industria.cnpj);
@@ -251,33 +253,45 @@ void consultarEmpresa() {
     // Criando uma instância da estrutura para armazenar os dados
     struct Industria minhaIndustria;
 
-    // Lendo os dados do arquivo, descriptografando e imprimindo na tela
+    // Lendo os dados do arquivo e armazenando temporariamente
     while (fscanf(arquivo, "%s", minhaIndustria.cnpj) != EOF) {
-        descriptografar(minhaIndustria.cnpj, chave);
+        decifraCesar(minhaIndustria.cnpj, chave);
+
         fscanf(arquivo, "%s", minhaIndustria.nome);
-        descriptografar(minhaIndustria.nome, chave);
+        decifraCesar(minhaIndustria.nome, chave);
+
         fscanf(arquivo, "%s", minhaIndustria.nomeFantasia);
-        descriptografar(minhaIndustria.nomeFantasia, chave);
+        decifraCesar(minhaIndustria.nomeFantasia, chave);
+
         fscanf(arquivo, "%s", minhaIndustria.email);
-        descriptografar(minhaIndustria.email, chave);
+        decifraCesar(minhaIndustria.email, chave);
+
         fscanf(arquivo, "%s", minhaIndustria.telefone);
-        descriptografar(minhaIndustria.telefone, chave);
+        decifraCesar(minhaIndustria.telefone, chave);
+
         fscanf(arquivo, "%s", minhaIndustria.dataAbertura);
-        descriptografar(minhaIndustria.dataAbertura, chave);
+        decifraCesar(minhaIndustria.dataAbertura, chave);
+
         fscanf(arquivo, "%s", minhaIndustria.endereco.rua);
-        descriptografar(minhaIndustria.endereco.rua, chave);
+        decifraCesar(minhaIndustria.endereco.rua, chave);
+
         fscanf(arquivo, "%s", minhaIndustria.endereco.numero);
-        descriptografar(minhaIndustria.endereco.numero, chave);
+        decifraCesar(minhaIndustria.endereco.numero, chave);
+
         fscanf(arquivo, "%s", minhaIndustria.endereco.bairro);
-        descriptografar(minhaIndustria.endereco.bairro, chave);
+        decifraCesar(minhaIndustria.endereco.bairro, chave);
+
         fscanf(arquivo, "%s", minhaIndustria.endereco.cidade);
-        descriptografar(minhaIndustria.endereco.cidade, chave);
+        decifraCesar(minhaIndustria.endereco.cidade, chave);
+
         fscanf(arquivo, "%s", minhaIndustria.endereco.estado);
-        descriptografar(minhaIndustria.endereco.estado, chave);
+        decifraCesar(minhaIndustria.endereco.estado, chave);
+
         fscanf(arquivo, "%s", minhaIndustria.endereco.cep);
-        descriptografar(minhaIndustria.endereco.cep, chave);
+        decifraCesar(minhaIndustria.endereco.cep, chave);
+
         fscanf(arquivo, "%s", minhaIndustria.cpfResponsavel);
-        descriptografar(minhaIndustria.cpfResponsavel, chave);
+        decifraCesar(minhaIndustria.cpfResponsavel, chave);
 
         // Imprimindo os dados
         printf("CNPJ: %s\n", minhaIndustria.cnpj);
@@ -299,6 +313,7 @@ void consultarEmpresa() {
 
     // Fechando o arquivo
     fclose(arquivo);
+    
 };
 
 
