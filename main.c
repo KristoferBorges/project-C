@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <direct.h>
 
 // Defina macros para as cores
 #define RESET_COLOR "\x1b[0m"
@@ -7,6 +8,7 @@
 #define GREEN "\x1b[32m"
 #define YELLOW "\x1b[33m"
 #define BLUE "\x1b[34m"
+
 char login[50];
 char senha[50];
 
@@ -102,6 +104,7 @@ int realizarLogin() {
 // Função para cadastrar uma indústria
 void cadastrarIndustria() {
     int chave = 3;
+    char caminhoArquivoPasta[100];
     char caminhoArquivo[100];
 
     imprimirLinhaCentralizada(GREEN " CADASTRO DE INDUSTRIA " RESET_COLOR);
@@ -109,7 +112,6 @@ void cadastrarIndustria() {
     // Dados da empresa
     printf(GREEN "[?] - CNPJ: " RESET_COLOR);
     scanf("%s", industria.cnpj);
-    sprintf(caminhoArquivo, "../data/industrias/industria_%s.txt", industria.cnpj);
 
     printf(GREEN "[?] - Nome da Empresa: " RESET_COLOR);
     scanf("%s", industria.nome);
@@ -155,6 +157,18 @@ void cadastrarIndustria() {
     printf(GREEN "[?] - CPF do Responsavel: " RESET_COLOR);
     scanf("%s", industria.cpfResponsavel);
 
+    // Cria uma pasta para o Industria
+    sprintf(caminhoArquivoPasta, "../data/industrias/industria_%s", industria.cnpj);
+
+    if (mkdir(caminhoArquivoPasta) == 0) {
+        printf(GREEN "[!] - Industria cadastrada com sucesso!\n" RESET_COLOR);
+    } else {
+        printf(RED "[!] - Erro cadastrar Industria.\n" RESET_COLOR);
+    }
+
+    // Cria uma arquivo para o Industria
+    sprintf(caminhoArquivo, "../data/industrias/industria_%s/industria_%s.txt", industria.cnpj, industria.cnpj);
+
     // Salvando os dados da empresa em um arquivo (A empresa)
     cifraCesar(industria.cnpj, chave);
     cifraCesar(industria.nome, chave);
@@ -186,7 +200,6 @@ void cadastrarIndustria() {
     fprintf(arquivo, "%s\n", industria.cpfResponsavel);
     fclose(arquivo);
     printf("\n");
-    printf(GREEN "[!] - Industria cadastrada com sucesso!\n" RESET_COLOR);
 }
 
 // Função para gerar relatórios
@@ -195,6 +208,7 @@ void gerarRelatorio() {
 }
 
 void cadastrarFuncionario() {
+    char caminhoArquivoPasta[100];
     char caminhoArquivo[100];
     int chave = 3;
 
@@ -206,7 +220,6 @@ void cadastrarFuncionario() {
 
     printf(GREEN "[?] - CPF: " RESET_COLOR);
     scanf("%s", funcionario.cpf);
-    sprintf(caminhoArquivo, "../data/funcionarios/funcionario_%s.txt", funcionario.cpf);
 
     printf(GREEN "[?] - Data de Nascimento: " RESET_COLOR);
     scanf("%s", funcionario.dataNascimento);
@@ -231,6 +244,18 @@ void cadastrarFuncionario() {
 
     printf(GREEN "[?] - Status: " RESET_COLOR);
     scanf("%s", funcionario.status);
+
+    // Cria uma pasta para o funcionário
+    sprintf(caminhoArquivoPasta, "../data/funcionarios/funcionario_%s", funcionario.cpf);
+
+    if (mkdir(caminhoArquivoPasta) == 0) {
+        printf(GREEN "[!] - Funcionario cadastrado com sucesso!\n" RESET_COLOR);
+    } else {
+        printf(RED "[!] - Erro ao cadastrar Funcionario.\n" RESET_COLOR);
+    }
+
+    // Cria uma arquivo para o funcionário
+    sprintf(caminhoArquivo, "../data/funcionarios/funcionario_%s/funcionario_%s.txt", funcionario.cpf, funcionario.cpf);
 
     // Cripitografando os dados do funcionario
     cifraCesar(funcionario.nome, chave);
@@ -258,8 +283,6 @@ void cadastrarFuncionario() {
     fprintf(arquivo, "%s\n", funcionario.status);
     fclose(arquivo);
     printf("\n");
-
-    printf(GREEN "[!] - Funcionario cadastrado com sucesso!\n" RESET_COLOR);
 }
 
 void consultarFuncionario(){
@@ -273,7 +296,7 @@ void consultarFuncionario(){
     scanf("%s", procurarNome);
 
     // Construindo o nome do arquivo com base no nome
-    sprintf(nomeArquivo, "../data/funcionarios/funcionario_%s.txt", procurarNome);
+    sprintf(nomeArquivo, "../data/funcionarios/funcionario_%s/funcionario_%s.txt", procurarNome, procurarNome);
 
     // Abrindo o arquivo para leitura
     FILE *arquivo = fopen(nomeArquivo, "r");
