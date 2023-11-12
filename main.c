@@ -203,10 +203,10 @@ void cadastrarFuncionario() {
     // Dados do funcionario
     printf(GREEN "[?] - Nome: " RESET_COLOR);
     scanf("%s", funcionario.nome);
-    sprintf(caminhoArquivo, "../data/funcionarios/funcionario_%s.txt", funcionario.nome);
 
     printf(GREEN "[?] - CPF: " RESET_COLOR);
     scanf("%s", funcionario.cpf);
+    sprintf(caminhoArquivo, "../data/funcionarios/funcionario_%s.txt", funcionario.cpf);
 
     printf(GREEN "[?] - Data de Nascimento: " RESET_COLOR);
     scanf("%s", funcionario.dataNascimento);
@@ -269,7 +269,7 @@ void consultarFuncionario(){
     
     imprimirLinhaCentralizada(GREEN " CONSULTA DE FUNCIONARIO " RESET_COLOR);
 
-    printf(GREEN "[?] - Nome do Funcionario: " RESET_COLOR);
+    printf(GREEN "[?] - CPF do Funcionario: " RESET_COLOR);
     scanf("%s", procurarNome);
 
     // Construindo o nome do arquivo com base no nome
