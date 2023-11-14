@@ -9,9 +9,6 @@
 #define YELLOW "\x1b[33m"
 #define BLUE "\x1b[34m"
 
-char login[50];
-char senha[50];
-
 // Função para imprimir linha centralizada com asteriscos
 void imprimirLinhaCentralizada(const char *texto) {
     int larguraTotal = 60; 
@@ -82,23 +79,30 @@ struct Funcionario {
 
 // Função para realizar o login
 int realizarLogin() {
-    printf("\n");
-    imprimirLinhaCentralizada(GREEN " SISTEMA DE GESTAO AMBIENTAL " RESET_COLOR);
+    char login[50];
+    char senha[50];
+    int sucessoLogin = 0;
 
-    printf(GREEN "[?] - Usuario: " RESET_COLOR);
-    scanf("%s", login);
-    printf(GREEN "[?] - Senha: " RESET_COLOR);
-    scanf("%s", senha);
+    do {
+        printf("\n");
+        imprimirLinhaCentralizada(GREEN " SISTEMA DE GESTAO AMBIENTAL " RESET_COLOR);
 
-    if (strcmp(login, "admin") == 0 && strcmp(senha, "1533") == 0) {
-        printf("\n");
-        printf(GREEN "[!] - Login realizado com sucesso!\n" RESET_COLOR);
-        return 1;
-    } else {
-        printf("\n");
-        printf(RED "[!] - Login ou senha incorretos. Tente novamente.\n" RESET_COLOR);
-        return 0;
-    }
+        printf(GREEN "[?] - Usuario: " RESET_COLOR);
+        scanf("%s", login);
+        printf(GREEN "[?] - Senha: " RESET_COLOR);
+        scanf("%s", senha);
+
+        if (strcmp(login, "admin") == 0 && strcmp(senha, "1533") == 0) {
+            printf("\n");
+            printf(GREEN "[!] - Login realizado com sucesso!\n" RESET_COLOR);
+            sucessoLogin = 1; // Defina para 1 para sair do loop
+        } else {
+            printf("\n");
+            printf(RED "[!] - Login ou senha incorretos. Tente novamente.\n" RESET_COLOR);
+        }
+    } while (!sucessoLogin);
+
+    return 1;
 }
 
 // Função para cadastrar uma indústria
@@ -361,7 +365,7 @@ void consultarFuncionario(){
     
 };
 
-void consultarEmpresa() {
+void consultarIndustria() {
     char procurarCNPJ[15];
     char nomeArquivo[100];
     int chave = 3;
@@ -372,7 +376,7 @@ void consultarEmpresa() {
     scanf("%s", procurarCNPJ);
 
     // Construindo o nome do arquivo com base no CNPJ
-    sprintf(nomeArquivo, "../data/industrias/industria_%s.txt", procurarCNPJ);
+    sprintf(nomeArquivo, "../data/industrias/industria_%s/industria_%s.txt", procurarCNPJ, procurarCNPJ);
 
     // Abrindo o arquivo para leitura
     FILE *arquivo = fopen(nomeArquivo, "r");
@@ -457,10 +461,10 @@ int main() {
             imprimirLinhaCentralizada(GREEN " MENU PRINCIPAL " RESET_COLOR);
             printf("\n");
             printf(RED "(1) - " GREEN "Cadastrar Industria\n" RESET_COLOR);
-            printf(RED "(2) - " GREEN "Gerar Relatorio\n" RESET_COLOR);
+            printf(RED "(2) - " GREEN "Consultar Industria\n" RESET_COLOR);
             printf(RED "(3) - " GREEN "Cadastrar Funcionario\n" RESET_COLOR);
             printf(RED "(4) - " GREEN "Consultar Funcionario\n" RESET_COLOR);
-            printf(RED "(5) - " GREEN "Consultar Empresa\n" RESET_COLOR);
+            printf(RED "(5) - " GREEN "Gerar Relatorio\n" RESET_COLOR);
             printf(RED "(6) - " GREEN "Sair\n" RESET_COLOR);
             printf(GREEN "[?] - Escolha uma opcao: " RESET_COLOR);
             scanf("%d", &opcao);
@@ -471,16 +475,16 @@ int main() {
                     cadastrarIndustria();
                     break;
                 case 2:
-                    gerarRelatorio();
+                    cadastrarFuncionario();
                     break;
                 case 3:
-                    cadastrarFuncionario();
+                    consultarIndustria();
                     break;
                 case 4:
                     consultarFuncionario();
                     break;
                 case 5:
-                    consultarEmpresa();
+                    gerarRelatorio();
                     break;
                 case 6:
                     printf(RED "[!] - SISTEMA ENCERRADO!\n" RESET_COLOR);
@@ -490,7 +494,7 @@ int main() {
             }
         }
     } else {
-        printf("Login falhou. Encerrando o sistema.\n");
+        printf(RED "[!] - Login falhou. Encerrando o sistema.\n" RESET_COLOR);
     }
 
     return 0;
