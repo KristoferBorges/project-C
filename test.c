@@ -1,31 +1,18 @@
-void decifraCesar(char *texto, int chave) {
-    for (int i = 0; texto[i] != '\0'; i++) {
-        // Verifica se o caractere é uma letra maiúscula
-        if (isalpha(texto[i]) && isupper(texto[i])) {
-            texto[i] = ((texto[i] - 'A' - chave + 26) % 26) + 'A';
-        }
-        // Verifica se o caractere é uma letra minúscula
-        else if (isalpha(texto[i]) && islower(texto[i])) {
-            texto[i] = ((texto[i] - 'a' - chave + 26) % 26) + 'a';
-        }
-        // Caso não seja uma letra, não realiza alteração
-    }
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int main() {
+    // Inicializa a semente para a função rand()
+    srand((unsigned int)time(NULL));
+
+    // Gera dois números aleatórios
+    int numero1 = rand() % 10001; // Gera um número entre 0 e 10000
+    int numero2 = rand() % 10001; // Gera um número entre 0 e 10000
+
+    // Exibe os números gerados
+    printf("Número 1: %d\n", numero1);
+    printf("Número 2: %d\n", numero2);
+
+    return 0;
 }
-
-void decifraCesar(char *texto, int chave) {
-    for (int i = 0; texto[i] != '\0'; i++) {
-        // Verifica se o caractere é uma letra maiúscula
-        if (isalpha(texto[i]) && isupper(texto[i])) {
-            texto[i] = (((texto[i] - 'A' - chave) % 26) + 26) % 26 + 'A';
-        }
-        // Verifica se o caractere é uma letra minúscula
-        else if (isalpha(texto[i]) && islower(texto[i])) {
-            texto[i] = (((texto[i] - 'a' - chave) % 26) + 26) % 26 + 'a';
-        }
-        // Não realiza alteração se não for uma letra
-    }
-}
-
-
-
-

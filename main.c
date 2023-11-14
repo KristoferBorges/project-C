@@ -1,6 +1,8 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <direct.h>
+#include <time.h>
 
 // Defina macros para as cores
 #define RESET_COLOR "\x1b[0m"
@@ -30,13 +32,13 @@ void imprimirLinhaCentralizada(const char *texto) {
 
 void cifraCesar(char *texto, char chave) {
     for (int i = 0; texto[i] != '\0'; i++) {
-        texto[i] = texto[i] ^ chave; // Operação XOR para criptografia
+        texto[i] = texto[i] ^ chave; 
     }
 }
 
 void decifraCesar(char *texto, char chave) {
     for (int i = 0; texto[i] != '\0'; i++) {
-        texto[i] = texto[i] ^ chave; // Operação XOR para descriptografia
+        texto[i] = texto[i] ^ chave; 
     }
 }
 
@@ -60,7 +62,24 @@ struct Industria {
         char cep[15];
     } endereco;
 
-    // Outros campos de informações da indústria
+    struct Relatorio{
+        char data[15];
+        char insumosTratadosM1[100];
+        char totalGastoM1[100];
+        char insumosTratadosM2[100];
+        char totalGastoM2[100];
+        char insumosTratadosM3[100];
+        char totalGastoM3[100];
+        char insumosTratadosM4[100];
+        char totalGastoM4[100];
+        char insumosTratadosM5[100];
+        char totalGastoM5[100];
+        char insumosTratadosM6[100];
+        char totalGastoM6[100];
+        char descricao[100];
+    } relatorio;
+
+
 } industria;
 
 struct Funcionario {
@@ -110,6 +129,8 @@ void cadastrarIndustria() {
     int chave = 3;
     char caminhoArquivoPasta[100];
     char caminhoArquivo[100];
+    char caminhoArquivoPastaRelatorio[100];
+    char caminhoArquivoRelatorio[100];
 
     imprimirLinhaCentralizada(GREEN " CADASTRO DE INDUSTRIA " RESET_COLOR);
 
@@ -163,15 +184,25 @@ void cadastrarIndustria() {
 
     // Cria uma pasta para o Industria
     sprintf(caminhoArquivoPasta, "../data/industrias/industria_%s", industria.cnpj);
+    sprintf(caminhoArquivoPastaRelatorio, "../data/industrias/industria_%s/relatorio", industria.cnpj);
 
     if (mkdir(caminhoArquivoPasta) == 0) {
-        printf(GREEN "[!] - Industria cadastrada com sucesso!\n" RESET_COLOR);
+        sprintf(caminhoArquivo, "../data/industrias/industria_%s/industria_%s.txt", industria.cnpj, industria.cnpj);
+        
+        if (mkdir(caminhoArquivoPastaRelatorio) == 0) {
+            sprintf(caminhoArquivoRelatorio, "../data/industrias/industria_%s/relatorio/relatorio_%s.txt", industria.cnpj, industria.cnpj);
+            printf(GREEN "[!] - Industria cadastrada com sucesso!\n" RESET_COLOR);
+
+        } else {
+            printf(RED "[!] - Erro ao criar pasta para o relatorio.\n" RESET_COLOR);
+        }
+
+        
     } else {
         printf(RED "[!] - Erro cadastrar Industria.\n" RESET_COLOR);
     }
 
-    // Cria uma arquivo para o Industria
-    sprintf(caminhoArquivo, "../data/industrias/industria_%s/industria_%s.txt", industria.cnpj, industria.cnpj);
+    
 
     // Salvando os dados da empresa em um arquivo (A empresa)
     cifraCesar(industria.cnpj, chave);
@@ -204,6 +235,53 @@ void cadastrarIndustria() {
     fprintf(arquivo, "%s\n", industria.cpfResponsavel);
     fclose(arquivo);
     printf("\n");
+
+    // Gerando primeiro relatório pelo sistema
+    time_t t;
+    struct tm *dataHoraAtual;
+
+    time(&t);
+    dataHoraAtual = localtime(&t);
+
+    char dataAtual[11];
+    strftime(dataAtual, sizeof(dataAtual), "%d/%m/%Y", dataHoraAtual);
+
+    // Geração de informações para Insumos Tratados e Total Gasto Mensal
+    srand((unsigned int)time(NULL));
+
+    int mes1 = rand() % 10001; // Gera um número entre 0 e 10000
+    int gastoM1 = rand() % 10001; // Gera um número entre 0 e 10000
+    int mes2 = rand() % 10001; // Gera um número entre 0 e 10000
+    int gastoM2 = rand() % 10001; // Gera um número entre 0 e 10000
+    int mes3 = rand() % 10001; // Gera um número entre 0 e 10000
+    int gastoM3 = rand() % 10001; // Gera um número entre 0 e 10000
+    int mes4 = rand() % 10001; // Gera um número entre 0 e 10000
+    int gastoM4 = rand() % 10001; // Gera um número entre 0 e 10000
+    int mes5 = rand() % 10001; // Gera um número entre 0 e 10000
+    int gastoM5 = rand() % 10001; // Gera um número entre 0 e 10000
+    int mes6 = rand() % 10001; // Gera um número entre 0 e 10000
+    int gastoM6 = rand() % 10001; // Gera um número entre 0 e 10000
+    
+
+    // Salvando os dados da empresa em um arquivo (Relatorio)
+    FILE *arquivoRelatorio = fopen(caminhoArquivoRelatorio, "a");
+    fprintf(arquivoRelatorio, "%s\n", dataAtual);
+    fprintf(arquivoRelatorio, "%d\n", mes1);
+    fprintf(arquivoRelatorio, "%d\n", gastoM1);
+    fprintf(arquivoRelatorio, "%d\n", mes2);
+    fprintf(arquivoRelatorio, "%d\n", gastoM2);
+    fprintf(arquivoRelatorio, "%d\n", mes3);
+    fprintf(arquivoRelatorio, "%d\n", gastoM3);
+    fprintf(arquivoRelatorio, "%d\n", mes4);
+    fprintf(arquivoRelatorio, "%d\n", gastoM4);
+    fprintf(arquivoRelatorio, "%d\n", mes5);
+    fprintf(arquivoRelatorio, "%d\n", gastoM5);
+    fprintf(arquivoRelatorio, "%d\n", mes6);
+    fprintf(arquivoRelatorio, "%d\n", gastoM6);
+    fprintf(arquivoRelatorio, "%s\n", "Relatorio gerado pelo sistema.");
+    fclose(arquivoRelatorio);
+    printf("\n");
+
 }
 
 // Função para gerar relatórios
@@ -253,13 +331,11 @@ void cadastrarFuncionario() {
     sprintf(caminhoArquivoPasta, "../data/funcionarios/funcionario_%s", funcionario.cpf);
 
     if (mkdir(caminhoArquivoPasta) == 0) {
+        sprintf(caminhoArquivo, "../data/funcionarios/funcionario_%s/funcionario_%s.txt", funcionario.cpf, funcionario.cpf);
         printf(GREEN "[!] - Funcionario cadastrado com sucesso!\n" RESET_COLOR);
     } else {
         printf(RED "[!] - Erro ao cadastrar Funcionario.\n" RESET_COLOR);
     }
-
-    // Cria uma arquivo para o funcionário
-    sprintf(caminhoArquivo, "../data/funcionarios/funcionario_%s/funcionario_%s.txt", funcionario.cpf, funcionario.cpf);
 
     // Cripitografando os dados do funcionario
     cifraCesar(funcionario.nome, chave);
@@ -368,6 +444,7 @@ void consultarFuncionario(){
 void consultarIndustria() {
     char procurarCNPJ[15];
     char nomeArquivo[100];
+    char nomeArquivoRelatorio[100];
     int chave = 3;
     
     imprimirLinhaCentralizada(GREEN " CONSULTA DE EMPRESA " RESET_COLOR);
@@ -377,11 +454,20 @@ void consultarIndustria() {
 
     // Construindo o nome do arquivo com base no CNPJ
     sprintf(nomeArquivo, "../data/industrias/industria_%s/industria_%s.txt", procurarCNPJ, procurarCNPJ);
-
+    sprintf(nomeArquivoRelatorio, "../data/industrias/industria_%s/relatorio/relatorio_%s.txt", procurarCNPJ, procurarCNPJ);
     // Abrindo o arquivo para leitura
     FILE *arquivo = fopen(nomeArquivo, "r");
 
     if (arquivo == NULL) {
+        printf("\n");
+        printf(RED "[!] - Erro ao abrir o arquivo ou a empresa nao foi encontrada.\n" RESET_COLOR);
+        return;
+    }
+
+    // Abrindo o arquivo para leitura
+    FILE *arquivoRelatorio = fopen(nomeArquivoRelatorio, "r");
+
+    if (arquivoRelatorio == NULL) {
         printf("\n");
         printf(RED "[!] - Erro ao abrir o arquivo ou a empresa nao foi encontrada.\n" RESET_COLOR);
         return;
@@ -448,9 +534,41 @@ void consultarIndustria() {
         printf("\n");
     }
 
+    fscanf(arquivoRelatorio, "%s", minhaIndustria.relatorio.data);
+    fscanf(arquivoRelatorio, "%s", minhaIndustria.relatorio.insumosTratadosM1);
+    fscanf(arquivoRelatorio, "%s", minhaIndustria.relatorio.totalGastoM1);
+    fscanf(arquivoRelatorio, "%s", minhaIndustria.relatorio.insumosTratadosM2);
+    fscanf(arquivoRelatorio, "%s", minhaIndustria.relatorio.totalGastoM2);
+    fscanf(arquivoRelatorio, "%s", minhaIndustria.relatorio.insumosTratadosM3);
+    fscanf(arquivoRelatorio, "%s", minhaIndustria.relatorio.totalGastoM3);
+    fscanf(arquivoRelatorio, "%s", minhaIndustria.relatorio.insumosTratadosM4);
+    fscanf(arquivoRelatorio, "%s", minhaIndustria.relatorio.totalGastoM4);
+    fscanf(arquivoRelatorio, "%s", minhaIndustria.relatorio.insumosTratadosM5);
+    fscanf(arquivoRelatorio, "%s", minhaIndustria.relatorio.totalGastoM5);
+    fscanf(arquivoRelatorio, "%s", minhaIndustria.relatorio.insumosTratadosM6);
+    fscanf(arquivoRelatorio, "%s", minhaIndustria.relatorio.totalGastoM6);
+    fscanf(arquivoRelatorio, "%s", minhaIndustria.relatorio.descricao);
+
+    // Imprimindo os dados
+    printf("Data: %s\n", minhaIndustria.relatorio.data);
+    printf("Insumos Tratados 1 Mes: %s\n", minhaIndustria.relatorio.insumosTratadosM1);
+    printf("Total Gasto Mensal: %s\n\n", minhaIndustria.relatorio.totalGastoM1);
+    printf("Insumos Tratados 2 Mes: %s\n", minhaIndustria.relatorio.insumosTratadosM2);
+    printf("Total Gasto Mensal: %s\n\n", minhaIndustria.relatorio.totalGastoM2);
+    printf("Insumos Tratados 3 Mes: %s\n", minhaIndustria.relatorio.insumosTratadosM3);
+    printf("Total Gasto Mensal: %s\n\n", minhaIndustria.relatorio.totalGastoM3);
+    printf("Insumos Tratados 4 Mes: %s\n", minhaIndustria.relatorio.insumosTratadosM4);
+    printf("Total Gasto Mensal: %s\n\n", minhaIndustria.relatorio.totalGastoM4);
+    printf("Insumos Tratados 5 Mes: %s\n", minhaIndustria.relatorio.insumosTratadosM5);
+    printf("Total Gasto Mensal: %s\n\n", minhaIndustria.relatorio.totalGastoM5);
+    printf("Insumos Tratados 6 Mes: %s\n", minhaIndustria.relatorio.insumosTratadosM6);
+    printf("Total Gasto Mensal: %s\n\n", minhaIndustria.relatorio.totalGastoM6);
+    
+    printf("Descricao: %s\n", minhaIndustria.relatorio.descricao);
+    
     // Fechando o arquivo
     fclose(arquivo);
-    
+    fclose(arquivoRelatorio);
 };
 
 
@@ -461,8 +579,8 @@ int main() {
             imprimirLinhaCentralizada(GREEN " MENU PRINCIPAL " RESET_COLOR);
             printf("\n");
             printf(RED "(1) - " GREEN "Cadastrar Industria\n" RESET_COLOR);
-            printf(RED "(2) - " GREEN "Consultar Industria\n" RESET_COLOR);
-            printf(RED "(3) - " GREEN "Cadastrar Funcionario\n" RESET_COLOR);
+            printf(RED "(2) - " GREEN "Cadastrar Funcionario\n" RESET_COLOR);
+            printf(RED "(3) - " GREEN "Consultar Industria\n" RESET_COLOR);
             printf(RED "(4) - " GREEN "Consultar Funcionario\n" RESET_COLOR);
             printf(RED "(5) - " GREEN "Gerar Relatorio\n" RESET_COLOR);
             printf(RED "(6) - " GREEN "Sair\n" RESET_COLOR);
