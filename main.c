@@ -114,7 +114,7 @@ int realizarLogin() {
         if (strcmp(login, "admin") == 0 && strcmp(senha, "1533") == 0) {
             printf("\n");
             printf(GREEN "[!] - Login realizado com sucesso!\n" RESET_COLOR);
-            sucessoLogin = 1; // Defina para 1 para sair do loop
+            sucessoLogin = 1;
         } else {
             printf("\n");
             printf(RED "[!] - Login ou senha incorretos. Tente novamente.\n" RESET_COLOR);
@@ -131,6 +131,7 @@ void cadastrarIndustria() {
     char caminhoArquivo[100];
     char caminhoArquivoPastaRelatorio[100];
     char caminhoArquivoRelatorio[100];
+    char caminhoArquivoRelatorioBackup[100];
 
     imprimirLinhaCentralizada(GREEN " CADASTRO DE INDUSTRIA " RESET_COLOR);
 
@@ -185,18 +186,20 @@ void cadastrarIndustria() {
     // Cria uma pasta para o Industria
     sprintf(caminhoArquivoPasta, "../data/industrias/industria_%s", industria.cnpj);
     sprintf(caminhoArquivoPastaRelatorio, "../data/industrias/industria_%s/relatorio", industria.cnpj);
+    sprintf(caminhoArquivoRelatorioBackup, "../data/industrias/industria_%s/relatoriobackup", industria.cnpj);
 
     if (mkdir(caminhoArquivoPasta) == 0) {
         sprintf(caminhoArquivo, "../data/industrias/industria_%s/industria_%s.txt", industria.cnpj, industria.cnpj);
-        
-        if (mkdir(caminhoArquivoPastaRelatorio) == 0) {
-            sprintf(caminhoArquivoRelatorio, "../data/industrias/industria_%s/relatorio/relatorio_%s.txt", industria.cnpj, industria.cnpj);
-            printf(GREEN "[!] - Industria cadastrada com sucesso!\n" RESET_COLOR);
 
-        } else {
-            printf(RED "[!] - Erro ao criar pasta para o relatorio.\n" RESET_COLOR);
-        }
+            if (mkdir(caminhoArquivoRelatorioBackup) == 0){
+                if (mkdir(caminhoArquivoPastaRelatorio) == 0) {
+                    sprintf(caminhoArquivoRelatorio, "../data/industrias/industria_%s/relatorio/relatorio_%s.txt", industria.cnpj, industria.cnpj);
+                    printf(GREEN "[!] - Industria cadastrada com sucesso!\n" RESET_COLOR);
 
+                } else {
+                    printf(RED "[!] - Erro ao criar pasta para o relatorio.\n" RESET_COLOR);
+                }
+            }
         
     } else {
         printf(RED "[!] - Erro cadastrar Industria.\n" RESET_COLOR);
@@ -278,15 +281,165 @@ void cadastrarIndustria() {
     fprintf(arquivoRelatorio, "%d\n", gastoM5);
     fprintf(arquivoRelatorio, "%d\n", mes6);
     fprintf(arquivoRelatorio, "%d\n", gastoM6);
-    fprintf(arquivoRelatorio, "%s\n", "Relatorio gerado pelo sistema.");
+    fprintf(arquivoRelatorio, "%s\n", "Relatorio_gerado_pelo_sistema.");
     fclose(arquivoRelatorio);
     printf("\n");
 
 }
 
+void novoRelatorio(char caminhoBackup[100], char caminhoRelatorio[100]){
+    struct Industria relatorioIndustriaBackup;
+
+    printf("\n");
+    imprimirLinhaCentralizada(GREEN " SALVANDO RELATORIO " RESET_COLOR);
+
+    // Pegando informações e armazenando temporariamente
+    FILE *arquivoRelatorio = fopen(caminhoRelatorio, "r");
+    fscanf(arquivoRelatorio, "%s", relatorioIndustriaBackup.relatorio.data);
+    fscanf(arquivoRelatorio, "%s", relatorioIndustriaBackup.relatorio.insumosTratadosM1);
+    fscanf(arquivoRelatorio, "%s", relatorioIndustriaBackup.relatorio.totalGastoM1);
+    fscanf(arquivoRelatorio, "%s", relatorioIndustriaBackup.relatorio.insumosTratadosM2);
+    fscanf(arquivoRelatorio, "%s", relatorioIndustriaBackup.relatorio.totalGastoM2);
+    fscanf(arquivoRelatorio, "%s", relatorioIndustriaBackup.relatorio.insumosTratadosM3);
+    fscanf(arquivoRelatorio, "%s", relatorioIndustriaBackup.relatorio.totalGastoM3);
+    fscanf(arquivoRelatorio, "%s", relatorioIndustriaBackup.relatorio.insumosTratadosM4);
+    fscanf(arquivoRelatorio, "%s", relatorioIndustriaBackup.relatorio.totalGastoM4);
+    fscanf(arquivoRelatorio, "%s", relatorioIndustriaBackup.relatorio.insumosTratadosM5);
+    fscanf(arquivoRelatorio, "%s", relatorioIndustriaBackup.relatorio.totalGastoM5);
+    fscanf(arquivoRelatorio, "%s", relatorioIndustriaBackup.relatorio.insumosTratadosM6);
+    fscanf(arquivoRelatorio, "%s", relatorioIndustriaBackup.relatorio.totalGastoM6);
+    fscanf(arquivoRelatorio, "%s", relatorioIndustriaBackup.relatorio.descricao);
+
+    // Fechando o arquivo
+    fclose(arquivoRelatorio);
+
+    // Formatação dos dados antes do Backup
+
+    // Inserindo informações no arquivo de backup
+    FILE *arquivoRelatorioBackup = fopen(caminhoBackup, "a");
+    fprintf(arquivoRelatorioBackup, "[%s]\n", relatorioIndustriaBackup.relatorio.data);
+    fprintf(arquivoRelatorioBackup, "%s\n", relatorioIndustriaBackup.relatorio.insumosTratadosM1);
+    fprintf(arquivoRelatorioBackup, "%s\n", relatorioIndustriaBackup.relatorio.totalGastoM1);
+    fprintf(arquivoRelatorioBackup, "%s\n", relatorioIndustriaBackup.relatorio.insumosTratadosM2);
+    fprintf(arquivoRelatorioBackup, "%s\n", relatorioIndustriaBackup.relatorio.totalGastoM2);
+    fprintf(arquivoRelatorioBackup, "%s\n", relatorioIndustriaBackup.relatorio.insumosTratadosM3);
+    fprintf(arquivoRelatorioBackup, "%s\n", relatorioIndustriaBackup.relatorio.totalGastoM3);
+    fprintf(arquivoRelatorioBackup, "%s\n", relatorioIndustriaBackup.relatorio.insumosTratadosM4);
+    fprintf(arquivoRelatorioBackup, "%s\n", relatorioIndustriaBackup.relatorio.totalGastoM4);
+    fprintf(arquivoRelatorioBackup, "%s\n", relatorioIndustriaBackup.relatorio.insumosTratadosM5);
+    fprintf(arquivoRelatorioBackup, "%s\n", relatorioIndustriaBackup.relatorio.totalGastoM5);
+    fprintf(arquivoRelatorioBackup, "%s\n", relatorioIndustriaBackup.relatorio.insumosTratadosM6);
+    fprintf(arquivoRelatorioBackup, "%s\n", relatorioIndustriaBackup.relatorio.totalGastoM6);
+    fprintf(arquivoRelatorioBackup, "%s\n", relatorioIndustriaBackup.relatorio.descricao);
+
+    // Fechando o arquivo
+    fclose(arquivoRelatorioBackup);
+
+    // Mensagem de finalização
+    printf(GREEN "[!] - Relatorio salvo com sucesso!\n" RESET_COLOR);
+    printf("\n");
+
+    return;
+}
+
 // Função para gerar relatórios
 void gerarRelatorio() {
-    // Gerar relatórios (implementação necessária)
+    int opcao;
+    char procurarCNPJ[15];
+    char caminhoPastaRelatorio[100];
+    char caminhoArquivoRelatorio[100];
+    char caminhoArquivoRelatorioBackup[100];
+
+    // Pegando a data de atual
+    time_t t;
+    struct tm *dataHoraAtual;
+
+    time(&t);
+    dataHoraAtual = localtime(&t);
+    char dataFormatada[20];
+    strftime(dataFormatada, sizeof(dataFormatada), "%Y-%m-%d", dataHoraAtual);
+
+    // Criando uma instância da estrutura para armazenar os dados
+    struct Industria relatorioIndustria;
+
+    imprimirLinhaCentralizada(GREEN " GERAR RELATORIO " RESET_COLOR);
+    printf("\n");
+    printf(GREEN "[?] - Qual o CNPJ da empresa: " RESET_COLOR);
+    scanf("%s", procurarCNPJ);
+    sprintf(caminhoPastaRelatorio, "../data/industrias/industria_%s", procurarCNPJ);
+    sprintf(caminhoArquivoRelatorio, "../data/industrias/industria_%s/relatorio/relatorio_%s.txt", procurarCNPJ, procurarCNPJ);
+    sprintf(caminhoArquivoRelatorioBackup, "../data/industrias/industria_%s/relatoriobackup/relatorio_semestre_%s.txt", procurarCNPJ, dataFormatada);
+
+    FILE *arquivoRelatorio = fopen(caminhoArquivoRelatorio, "r");
+    if (arquivoRelatorio == NULL) {
+        // O arquivo não foi encontrado
+        printf(RED "[!] - Relatorio para o CNPJ [%s] nao foi encontrado.\n" RESET_COLOR, procurarCNPJ);
+        return;
+    } else {
+        // O arquivo foi encontrado
+        printf(GREEN "[!] - Arquivo encontrado.\n" RESET_COLOR);
+        printf("\n");
+    }
+
+    // Lendo os dados do arquivo e armazenando temporariamente
+    fscanf(arquivoRelatorio, "%s", relatorioIndustria.relatorio.data);
+    fscanf(arquivoRelatorio, "%s", relatorioIndustria.relatorio.insumosTratadosM1);
+    fscanf(arquivoRelatorio, "%s", relatorioIndustria.relatorio.totalGastoM1);
+    fscanf(arquivoRelatorio, "%s", relatorioIndustria.relatorio.insumosTratadosM2);
+    fscanf(arquivoRelatorio, "%s", relatorioIndustria.relatorio.totalGastoM2);
+    fscanf(arquivoRelatorio, "%s", relatorioIndustria.relatorio.insumosTratadosM3);
+    fscanf(arquivoRelatorio, "%s", relatorioIndustria.relatorio.totalGastoM3);
+    fscanf(arquivoRelatorio, "%s", relatorioIndustria.relatorio.insumosTratadosM4);
+    fscanf(arquivoRelatorio, "%s", relatorioIndustria.relatorio.totalGastoM4);
+    fscanf(arquivoRelatorio, "%s", relatorioIndustria.relatorio.insumosTratadosM5);
+    fscanf(arquivoRelatorio, "%s", relatorioIndustria.relatorio.totalGastoM5);
+    fscanf(arquivoRelatorio, "%s", relatorioIndustria.relatorio.insumosTratadosM6);
+    fscanf(arquivoRelatorio, "%s", relatorioIndustria.relatorio.totalGastoM6);
+    fscanf(arquivoRelatorio, "%s", relatorioIndustria.relatorio.descricao);
+
+    // Imprimindo os dados
+    printf("Data: %s\n", relatorioIndustria.relatorio.data);
+    printf("Insumos Tratados 1 Mes: R$ %s\n", relatorioIndustria.relatorio.insumosTratadosM1);
+    printf("Total Gasto Mensal: R$ %s\n\n", relatorioIndustria.relatorio.totalGastoM1);
+    printf("Insumos Tratados 2 Mes: R$ %s\n", relatorioIndustria.relatorio.insumosTratadosM2);
+    printf("Total Gasto Mensal: R$ %s\n\n", relatorioIndustria.relatorio.totalGastoM2);
+    printf("Insumos Tratados 3 Mes: R$ %s\n", relatorioIndustria.relatorio.insumosTratadosM3);
+    printf("Total Gasto Mensal: R$ %s\n\n", relatorioIndustria.relatorio.totalGastoM3);
+    printf("Insumos Tratados 4 Mes: R$ %s\n", relatorioIndustria.relatorio.insumosTratadosM4);
+    printf("Total Gasto Mensal: R$ %s\n\n", relatorioIndustria.relatorio.totalGastoM4);
+    printf("Insumos Tratados 5 Mes: R$ %s\n", relatorioIndustria.relatorio.insumosTratadosM5);
+    printf("Total Gasto Mensal: R$ %s\n\n", relatorioIndustria.relatorio.totalGastoM5);
+    printf("Insumos Tratados 6 Mes: R$ %s\n", relatorioIndustria.relatorio.insumosTratadosM6);
+    printf("Total Gasto Mensal: R$ %s\n\n", relatorioIndustria.relatorio.totalGastoM6);
+    printf("Descricao: %s\n", relatorioIndustria.relatorio.descricao);
+    printf("\n");
+
+    // Fechando o arquivo
+    fclose(arquivoRelatorio);
+
+    // Menu de opções
+    while(1){
+        imprimirLinhaCentralizada(GREEN " MENU DE OPCOES EMPRESA " RESET_COLOR);
+        printf(RED "(1) - " GREEN "Criar novo relatorio\n" RESET_COLOR);
+        printf(RED "(2) - " GREEN "Exportar relatorio em TxT\n" RESET_COLOR);
+        printf(RED "(3) - " GREEN "Voltar\n" RESET_COLOR);
+        printf("\n");
+        printf(GREEN "[?] - Escolha uma opcao: " RESET_COLOR);
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+            case 1:
+                break;
+            case 2:
+                novoRelatorio(caminhoArquivoRelatorioBackup, caminhoArquivoRelatorio);
+                break;
+            case 3:
+                return;
+            default:
+                printf(RED "[!] - Opcao invalida.\n" RESET_COLOR);
+                break;
+        }
+    }
 }
 
 void cadastrarFuncionario() {
@@ -551,18 +704,18 @@ void consultarIndustria() {
 
     // Imprimindo os dados
     printf("Data: %s\n", minhaIndustria.relatorio.data);
-    printf("Insumos Tratados 1 Mes: %s\n", minhaIndustria.relatorio.insumosTratadosM1);
-    printf("Total Gasto Mensal: %s\n\n", minhaIndustria.relatorio.totalGastoM1);
-    printf("Insumos Tratados 2 Mes: %s\n", minhaIndustria.relatorio.insumosTratadosM2);
-    printf("Total Gasto Mensal: %s\n\n", minhaIndustria.relatorio.totalGastoM2);
-    printf("Insumos Tratados 3 Mes: %s\n", minhaIndustria.relatorio.insumosTratadosM3);
-    printf("Total Gasto Mensal: %s\n\n", minhaIndustria.relatorio.totalGastoM3);
-    printf("Insumos Tratados 4 Mes: %s\n", minhaIndustria.relatorio.insumosTratadosM4);
-    printf("Total Gasto Mensal: %s\n\n", minhaIndustria.relatorio.totalGastoM4);
-    printf("Insumos Tratados 5 Mes: %s\n", minhaIndustria.relatorio.insumosTratadosM5);
-    printf("Total Gasto Mensal: %s\n\n", minhaIndustria.relatorio.totalGastoM5);
-    printf("Insumos Tratados 6 Mes: %s\n", minhaIndustria.relatorio.insumosTratadosM6);
-    printf("Total Gasto Mensal: %s\n\n", minhaIndustria.relatorio.totalGastoM6);
+    printf("Insumos Tratados 1 Mes: R$ %s\n", minhaIndustria.relatorio.insumosTratadosM1);
+    printf("Total Gasto Mensal: R$ %s\n\n", minhaIndustria.relatorio.totalGastoM1);
+    printf("Insumos Tratados 2 Mes: R$ %s\n", minhaIndustria.relatorio.insumosTratadosM2);
+    printf("Total Gasto Mensal: R$ %s\n\n", minhaIndustria.relatorio.totalGastoM2);
+    printf("Insumos Tratados 3 Mes: R$ %s\n", minhaIndustria.relatorio.insumosTratadosM3);
+    printf("Total Gasto Mensal: R$ %s\n\n", minhaIndustria.relatorio.totalGastoM3);
+    printf("Insumos Tratados 4 Mes: R$ %s\n", minhaIndustria.relatorio.insumosTratadosM4);
+    printf("Total Gasto Mensal: R$ %s\n\n", minhaIndustria.relatorio.totalGastoM4);
+    printf("Insumos Tratados 5 Mes: R$ %s\n", minhaIndustria.relatorio.insumosTratadosM5);
+    printf("Total Gasto Mensal: R$ %s\n\n", minhaIndustria.relatorio.totalGastoM5);
+    printf("Insumos Tratados 6 Mes: R$ %s\n", minhaIndustria.relatorio.insumosTratadosM6);
+    printf("Total Gasto Mensal: R$ %s\n\n", minhaIndustria.relatorio.totalGastoM6);
     
     printf("Descricao: %s\n", minhaIndustria.relatorio.descricao);
     
