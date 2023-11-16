@@ -461,7 +461,7 @@ void atualizarRelatorio(char caminhoArquivoRelatorio[100], char dataFormatada[15
 
     // Solicitando dados para alteração (relatorio principal)
     printf(RED "[!] - Caso nao queira alterar o dado, digite o mesmo.\n" RESET_COLOR);
-    printf(RED "[!] - Sertifique-se de gerar um backup da opcao de Exportar relatorio\n" RESET_COLOR);
+    printf(RED "[!] - Certifique-se de gerar um backup da opcao de Exportar relatorio\n" RESET_COLOR);
     printf(GREEN "[!] - Informe dos dados para atualizacao do relatorio.\n" RESET_COLOR);
 
     printf(GREEN "[?] - Insumos Tratados 1 Mes: " RESET_COLOR);
@@ -498,7 +498,7 @@ void atualizarRelatorio(char caminhoArquivoRelatorio[100], char dataFormatada[15
     scanf("%s", relatorioIndustria.relatorio.descricao);
     printf("\n");
 
-    // Salvando os dados no arquivo
+    // Salvando os dados no arquivo (relatorio principal)
     FILE *arquivoRelatorioAtualizado = fopen(caminhoArquivoRelatorio, "w");
     fprintf(arquivoRelatorioAtualizado, "%s\n", dataFormatada);
     fprintf(arquivoRelatorioAtualizado, "%s\n", relatorioIndustria.relatorio.insumosTratadosM1);
@@ -517,7 +517,7 @@ void atualizarRelatorio(char caminhoArquivoRelatorio[100], char dataFormatada[15
     fclose(arquivoRelatorioAtualizado);
 
     // Mensagem de finalização
-    printf(GREEN "[!] - Relatorio atualizado com sucesso!\n" RESET_COLOR);
+    printf(GREEN "[!] - Relatorio global atualizado com sucesso!\n" RESET_COLOR);
 
 }
 
@@ -529,14 +529,15 @@ void gerarRelatorio() {
     char caminhoArquivoRelatorio[100];
     char caminhoArquivoRelatorioBackup[100];
 
-    // Pegando a data de atual
+    // Pegando a data e hora atuais
     time_t t;
     struct tm *dataHoraAtual;
 
     time(&t);
     dataHoraAtual = localtime(&t);
     char dataFormatada[20];
-    strftime(dataFormatada, sizeof(dataFormatada), "%d-%m-%Y", dataHoraAtual);
+    strftime(dataFormatada, sizeof(dataFormatada), "%d-%m-%Y %H-%M-%S", dataHoraAtual);
+
 
     // Criando uma instância da estrutura para armazenar os dados
     struct Industria relatorioIndustria;
