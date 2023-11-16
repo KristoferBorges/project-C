@@ -5,20 +5,12 @@
 #include <time.h>
 #include <float.h>
 
-#ifdef _WIN32
-#include <windows.h>
-#else
-#include <unistd.h>
-#endif
-
 // Defina macros para as cores
 #define RESET_COLOR "\x1b[0m"
 #define RED "\x1b[31m"
 #define GREEN "\x1b[32m"
 #define YELLOW "\x1b[33m"
 #define BLUE "\x1b[34m"
-
-
 
 // Função para imprimir linha centralizada com asteriscos
 void imprimirLinhaCentralizada(const char *texto) {
@@ -1051,38 +1043,70 @@ void gerarRelatorioGlobal(){
     return;
 }
 
-void excluirIndustria(){
+void excluirIndustria() {
     char procurarCNPJ[20];
-    char caminhoPasta[100];
-
-    printf("\n");
+    char comando[100];
+    int opcao;
+    
     imprimirLinhaCentralizada(GREEN " EXCLUIR EMPRESA " RESET_COLOR);
 
     printf(GREEN "[?] - CNPJ da Empresa: " RESET_COLOR);
     scanf("%s", procurarCNPJ);
+    sprintf(comando, "rmdir /s /q ..\\data\\industrias\\industria_%s", procurarCNPJ);
 
-    sprintf(caminhoPasta, "../data/industrias/industria_%s", procurarCNPJ);
+    printf("\n");
+    printf(GREEN "[?] - Deseja realmente excluir a empresa? (1 - Sim / 2 - Nao): " RESET_COLOR);
+    scanf("%d", &opcao);
+    printf("\n");
 
-    #ifdef _WIN32
-        if (RemoveDirectory(caminhoPasta) != 0) {
-            printf("Empresa excluída com sucesso!\n");
-        } else {
-            printf("Erro ao excluir a empresa.\n");
-        }
-    #else
-        if (rmdir(caminhoPasta) == 0) {
-            printf("Empresa excluída com sucesso!\n");
-        } else {
-            printf("Erro ao excluir a empresa.\n");
-        }
-    #endif
+    switch (opcao) {
+        case 1:
+            if (system(comando) == 0) {
+                printf(GREEN "[!] - Empresa excluida com sucesso!\n" RESET_COLOR);
+            } else {
+                printf(RED "[!] - Erro ao excluir a empresa.\n" RESET_COLOR);
+            }
+        case 2:
+            printf("\n");
+            printf(RED "[!] - Operacao cancelada.\n" RESET_COLOR);
+            return;
+        default:
+            printf(RED "[!] - Opcao invalida. Tente novamente\n" RESET_COLOR);
+            break;
+    }
 }
 
 void excluirFuncionario(){
+    char procurarCPF[20];
+    char comando[100];
+    int opcao;
     
+    imprimirLinhaCentralizada(GREEN " EXCLUIR FUNCIONARIO " RESET_COLOR);
+
+    printf(GREEN "[?] - CPF do Funcionario: " RESET_COLOR);
+    scanf("%s", procurarCPF);
+    sprintf(comando, "rmdir /s /q ..\\data\\funcionarios\\funcionario_%s", procurarCPF);
 
     printf("\n");
-    imprimirLinhaCentralizada(GREEN " EXCLUIR FUNCIONARIO " RESET_COLOR);
+    printf(GREEN "[?] - Deseja realmente desligar o funcionario? (1 - Sim / 2 - Nao): " RESET_COLOR);
+    scanf("%d", &opcao);
+    printf("\n");
+
+    switch (opcao) {
+        case 1:
+            if (system(comando) == 0) {
+                printf(GREEN "[!] - Funcionario excluido com sucesso!\n" RESET_COLOR);
+            } else {
+                printf(RED "[!] - Erro ao excluir o Funcionario.\n" RESET_COLOR);
+            }
+        case 2:
+            printf("\n");
+            printf(RED "[!] - Operacao cancelada.\n" RESET_COLOR);
+            return;
+        default:
+            printf(RED "[!] - Opcao invalida. Tente novamente\n" RESET_COLOR);
+            break;
+    }
 }
 
 int main() {
