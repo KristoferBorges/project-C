@@ -1,0 +1,14 @@
+[2023-11-15]
+Mês 1: R$ 9000
+Valor Gasto: R$ 200
+Mês 2: R$ 9000
+Valor Gasto: R$ 4000
+Mês 3: R$ 15000
+Valor Gasto: R$ 1500
+Mês 4: R$ 9000
+Valor Gasto: R$ 1200
+Mês 5: R$ 9000
+Valor Gasto: R$ 1200
+Mês 6: R$ 7000
+Valor Gasto: R$ 300
+Descricao: Pethofe

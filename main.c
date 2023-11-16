@@ -162,12 +162,12 @@ void encontrarMaiorProducao(struct Industria *industrias, int numIndustrias, FIL
     }
 
     if (idxMaiorProducao != -1) {
-        fprintf(saida, "Indústria com maior produção:\n");
-        fprintf(saida, "Nome: %s\nRegião: %s\nProdução: %.2f\nAporte Financeiro: %.2f\n",
+        fprintf(saida, "Industria com maior producao:\n");
+        fprintf(saida, "Nome: %s\nRegiao: %s\nProducao: %.2f\nAporte Financeiro: %.2f\n",
                industrias[idxMaiorProducao].nome, industrias[idxMaiorProducao].regiao,
                industrias[idxMaiorProducao].producao, industrias[idxMaiorProducao].aporteFinanceiro);
     } else {
-        fprintf(saida, "Nenhuma indústria encontrada.\n");
+        fprintf(saida, "Nenhuma industria encontrada.\n");
     }
 }
 
@@ -184,12 +184,12 @@ void encontrarMenorProducao(struct Industria *industrias, int numIndustrias, FIL
     }
 
     if (idxMenorProducao != -1) {
-        fprintf(saida, "Indústria com menor produção:\n");
-        fprintf(saida, "Nome: %s\nRegião: %s\nProdução: %.2f\nAporte Financeiro: %.2f\n",
+        fprintf(saida, "Industria com menor producao:\n");
+        fprintf(saida, "Nome: %s\nRegiao: %s\nProducao: %.2f\nAporte Financeiro: %.2f\n",
                industrias[idxMenorProducao].nome, industrias[idxMenorProducao].regiao,
                industrias[idxMenorProducao].producao, industrias[idxMenorProducao].aporteFinanceiro);
     } else {
-        fprintf(saida, "Nenhuma indústria encontrada.\n");
+        fprintf(saida, "Nenhuma industria encontrada.\n");
     }
 }
 
@@ -331,7 +331,7 @@ void cadastrarIndustria() {
     dataHoraAtual = localtime(&t);
 
     char dataAtual[11];
-    strftime(dataAtual, sizeof(dataAtual), "%d/%m/%Y", dataHoraAtual);
+    strftime(dataAtual, sizeof(dataAtual), "%d-%m-%Y", dataHoraAtual);
 
     // Geração de informações para Insumos Tratados e Total Gasto Mensal
     srand((unsigned int)time(NULL));
@@ -389,7 +389,7 @@ void cadastrarIndustria() {
 
 }
 
-void novoRelatorio(char caminhoBackup[100], char caminhoRelatorio[100]){
+void realizarBackup(char caminhoArquivoRelatorioBackup[100], char caminhoRelatorio[100]){
     struct Industria relatorioIndustriaBackup;
 
     printf("\n");
@@ -418,7 +418,7 @@ void novoRelatorio(char caminhoBackup[100], char caminhoRelatorio[100]){
     // Formatação dos dados antes do Backup
 
     // Inserindo informações no arquivo de backup
-    FILE *arquivoRelatorioBackup = fopen(caminhoBackup, "a");
+    FILE *arquivoRelatorioBackup = fopen(caminhoArquivoRelatorioBackup, "a");
     fprintf(arquivoRelatorioBackup, "[%s]\n", relatorioIndustriaBackup.relatorio.data);
     fprintf(arquivoRelatorioBackup, "Mês 1: R$ %s\n", relatorioIndustriaBackup.relatorio.insumosTratadosM1);
     fprintf(arquivoRelatorioBackup, "Valor Gasto: R$ %s\n", relatorioIndustriaBackup.relatorio.totalGastoM1);
@@ -444,10 +444,87 @@ void novoRelatorio(char caminhoBackup[100], char caminhoRelatorio[100]){
     return;
 }
 
+void atualizarRelatorio(char caminhoArquivoRelatorio[100], char dataFormatada[15]){
+    printf("\n");
+    imprimirLinhaCentralizada(GREEN " ATUALIZAR RELATORIO " RESET_COLOR);
+    printf("\n");
+
+    // Criando uma instância da estrutura para armazenar os dados
+    struct Industria relatorioIndustria;
+
+    // Verificando a existência do arquivo
+    FILE *arquivoRelatorio = fopen(caminhoArquivoRelatorio, "r");
+    if (arquivoRelatorio == NULL) {
+        printf(RED "[!] - Relatorio nao foi encontrado.\n" RESET_COLOR);
+        return;
+    }
+
+    // Solicitando dados para alteração (relatorio principal)
+    printf(RED "[!] - Caso nao queira alterar o dado, digite o mesmo.\n" RESET_COLOR);
+    printf(RED "[!] - Sertifique-se de gerar um backup da opcao de Exportar relatorio\n" RESET_COLOR);
+    printf(GREEN "[!] - Informe dos dados para atualizacao do relatorio.\n" RESET_COLOR);
+
+    printf(GREEN "[?] - Insumos Tratados 1 Mes: " RESET_COLOR);
+    scanf("%s", relatorioIndustria.relatorio.insumosTratadosM1);
+    printf(GREEN "[?] - Total Gasto Mensal: " RESET_COLOR);
+    scanf("%s", relatorioIndustria.relatorio.totalGastoM1);
+    printf("\n");
+    printf(GREEN"[?] - Insumos Tratados 2 Mes: "RESET_COLOR);
+    scanf("%s", relatorioIndustria.relatorio.insumosTratadosM2);
+    printf(GREEN "[?] - Total Gasto Mensal: "RESET_COLOR);
+    scanf("%s", relatorioIndustria.relatorio.totalGastoM2);
+    printf("\n");
+    printf(GREEN "[?] - Insumos Tratados 3 Mes: "RESET_COLOR);
+    scanf("%s", relatorioIndustria.relatorio.insumosTratadosM3);
+    printf(GREEN "[?] - Total Gasto Mensal: "RESET_COLOR);
+    scanf("%s", relatorioIndustria.relatorio.totalGastoM3);
+    printf("\n");
+    printf(GREEN "[?] - Insumos Tratados 4 Mes: "RESET_COLOR);
+    scanf("%s", relatorioIndustria.relatorio.insumosTratadosM4);
+    printf(GREEN "[?] - Total Gasto Mensal: "RESET_COLOR);
+    scanf("%s", relatorioIndustria.relatorio.totalGastoM4);
+    printf("\n");
+    printf(GREEN "[?] - Insumos Tratados 5 Mes: "RESET_COLOR);
+    scanf("%s", relatorioIndustria.relatorio.insumosTratadosM5);
+    printf(GREEN "[?] - Total Gasto Mensal: "RESET_COLOR);
+    scanf("%s", relatorioIndustria.relatorio.totalGastoM5);
+    printf("\n");
+    printf(GREEN "[?] - Insumos Tratados 6 Mes: "RESET_COLOR);
+    scanf("%s", relatorioIndustria.relatorio.insumosTratadosM6);
+    printf(GREEN "[?] - Total Gasto Mensal: "RESET_COLOR);
+    scanf("%s", relatorioIndustria.relatorio.totalGastoM6);
+    printf("\n");
+    printf(GREEN "[?] - Descricao: "RESET_COLOR);
+    scanf("%s", relatorioIndustria.relatorio.descricao);
+    printf("\n");
+
+    // Salvando os dados no arquivo
+    FILE *arquivoRelatorioAtualizado = fopen(caminhoArquivoRelatorio, "w");
+    fprintf(arquivoRelatorioAtualizado, "%s\n", dataFormatada);
+    fprintf(arquivoRelatorioAtualizado, "%s\n", relatorioIndustria.relatorio.insumosTratadosM1);
+    fprintf(arquivoRelatorioAtualizado, "%s\n", relatorioIndustria.relatorio.totalGastoM1);
+    fprintf(arquivoRelatorioAtualizado, "%s\n", relatorioIndustria.relatorio.insumosTratadosM2);
+    fprintf(arquivoRelatorioAtualizado, "%s\n", relatorioIndustria.relatorio.totalGastoM2);
+    fprintf(arquivoRelatorioAtualizado, "%s\n", relatorioIndustria.relatorio.insumosTratadosM3);
+    fprintf(arquivoRelatorioAtualizado, "%s\n", relatorioIndustria.relatorio.totalGastoM3);
+    fprintf(arquivoRelatorioAtualizado, "%s\n", relatorioIndustria.relatorio.insumosTratadosM4);
+    fprintf(arquivoRelatorioAtualizado, "%s\n", relatorioIndustria.relatorio.totalGastoM4);
+    fprintf(arquivoRelatorioAtualizado, "%s\n", relatorioIndustria.relatorio.insumosTratadosM5);
+    fprintf(arquivoRelatorioAtualizado, "%s\n", relatorioIndustria.relatorio.totalGastoM5);
+    fprintf(arquivoRelatorioAtualizado, "%s\n", relatorioIndustria.relatorio.insumosTratadosM6);
+    fprintf(arquivoRelatorioAtualizado, "%s\n", relatorioIndustria.relatorio.totalGastoM6);
+    fprintf(arquivoRelatorioAtualizado, "%s\n", relatorioIndustria.relatorio.descricao);
+    fclose(arquivoRelatorioAtualizado);
+
+    // Mensagem de finalização
+    printf(GREEN "[!] - Relatorio atualizado com sucesso!\n" RESET_COLOR);
+
+}
+
 // Função para gerar relatórios
 void gerarRelatorio() {
     int opcao;
-    char procurarCNPJ[15];
+    char procurarCNPJ[20];
     char caminhoPastaRelatorio[100];
     char caminhoArquivoRelatorio[100];
     char caminhoArquivoRelatorioBackup[100];
@@ -459,7 +536,7 @@ void gerarRelatorio() {
     time(&t);
     dataHoraAtual = localtime(&t);
     char dataFormatada[20];
-    strftime(dataFormatada, sizeof(dataFormatada), "%Y-%m-%d", dataHoraAtual);
+    strftime(dataFormatada, sizeof(dataFormatada), "%d-%m-%Y", dataHoraAtual);
 
     // Criando uma instância da estrutura para armazenar os dados
     struct Industria relatorioIndustria;
@@ -531,9 +608,10 @@ void gerarRelatorio() {
 
         switch (opcao) {
             case 1:
+                atualizarRelatorio(caminhoArquivoRelatorio, dataFormatada);
                 break;
             case 2:
-                novoRelatorio(caminhoArquivoRelatorioBackup, caminhoArquivoRelatorio);
+                realizarBackup(caminhoArquivoRelatorioBackup, caminhoArquivoRelatorio);
                 break;
             case 3:
                 return;
@@ -839,7 +917,7 @@ void gerarRelatorioGlobal(){
     time(&t);
     dataHoraAtual = localtime(&t);
     char dataFormatada[20];
-    strftime(dataFormatada, sizeof(dataFormatada), "%Y-%m-%d", dataHoraAtual);
+    strftime(dataFormatada, sizeof(dataFormatada), "%Y/%m/%d", dataHoraAtual);
 
     const char *nomeArquivo = "../data/industrias/global/industrias_resumo.txt";
     char nomeArquivoSaida[50];
@@ -854,6 +932,7 @@ void gerarRelatorioGlobal(){
         exit(EXIT_FAILURE);
     } else {
         printf(GREEN "[!] - Relatorio global criado com sucesso.\n" RESET_COLOR);
+        printf(GREEN "[!] - Arquivo armazenado para Consulta!\n" RESET_COLOR);
     }
 
     lerIndustrias(nomeArquivo, industrias, &numIndustrias);
@@ -864,6 +943,15 @@ void gerarRelatorioGlobal(){
 
     fclose(saida);
 
+    // Impressão dos resultados
+    printf("\n");
+    imprimirLinhaCentralizada(GREEN " RESULTADO " RESET_COLOR);
+    printf("\n");
+    FILE *arquivoSaida = fopen(nomeArquivoSaida, "r");
+    char linha[100];
+    while (fgets(linha, sizeof(linha), arquivoSaida)) {
+        printf("%s", linha);
+    }
     return;
 }
 
@@ -877,8 +965,8 @@ int main() {
             printf(RED "(2) - " GREEN "Cadastrar Funcionario\n" RESET_COLOR);
             printf(RED "(3) - " GREEN "Consultar Industria\n" RESET_COLOR);
             printf(RED "(4) - " GREEN "Consultar Funcionario\n" RESET_COLOR);
-            printf(RED "(5) - " GREEN "Gerar Relatorio\n" RESET_COLOR);
-            printf(RED "(6) - " GREEN "Gerar Relatorio Global\n" RESET_COLOR);
+            printf(RED "(5) - " GREEN "Atualizar Relatorio " RED "(Industria)\n" RESET_COLOR);
+            printf(RED "(6) - " GREEN "Gerar Relatorio Global " RED "(Dados estatisticos)\n" RESET_COLOR);
             printf(RED "(7) - " GREEN "Sair\n" RESET_COLOR);
             printf(GREEN "[?] - Escolha uma opcao: " RESET_COLOR);
             scanf("%d", &opcao);
