@@ -6,8 +6,8 @@ AporteFinanceiro: 1000000.00
 CNPJ: 2222
 Nome: Livia
 Regiao: Vavala
-Producao: 0.00
-AporteFinanceiro: 0.00
+Producao: 990000.00
+AporteFinanceiro: 90000.00
 CNPJ: 3333
 Nome: Yan_Naves
 Regiao: Norte

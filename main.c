@@ -162,12 +162,12 @@ void encontrarMaiorProducao(struct Industria *industrias, int numIndustrias, FIL
     }
 
     if (idxMaiorProducao != -1) {
-        fprintf(saida, "Industria com maior producao:\n");
-        fprintf(saida, "Nome: %s\nRegiao: %s\nProducao: %.2f\nAporte Financeiro: %.2f\n",
+        fprintf(saida,"Industria com maior producao:\n");
+        fprintf(saida, " Nome: %s\n Regiao: %s\n Producao: R$ %.2f\n Aporte Financeiro: R$ %.2f\n",
                industrias[idxMaiorProducao].nome, industrias[idxMaiorProducao].regiao,
                industrias[idxMaiorProducao].producao, industrias[idxMaiorProducao].aporteFinanceiro);
     } else {
-        fprintf(saida, "Nenhuma industria encontrada.\n");
+        fprintf(saida,"[!] - Nenhuma industria encontrada.\n");
     }
 }
 
@@ -184,12 +184,12 @@ void encontrarMenorProducao(struct Industria *industrias, int numIndustrias, FIL
     }
 
     if (idxMenorProducao != -1) {
-        fprintf(saida, "Industria com menor producao:\n");
-        fprintf(saida, "Nome: %s\nRegiao: %s\nProducao: %.2f\nAporte Financeiro: %.2f\n",
+        fprintf(saida,"Industria com menor producao:\n");
+        fprintf(saida, " Nome: %s\n Regiao: %s\n Producao: R$ %.2f\n Aporte Financeiro: R$ %.2f\n",
                industrias[idxMenorProducao].nome, industrias[idxMenorProducao].regiao,
                industrias[idxMenorProducao].producao, industrias[idxMenorProducao].aporteFinanceiro);
     } else {
-        fprintf(saida, "Nenhuma industria encontrada.\n");
+        fprintf(saida,"[!] - Nenhuma industria encontrada.\n");
     }
 }
 
@@ -201,7 +201,8 @@ void calcularAporteFinanceiroSemestral(struct Industria *industrias, int numIndu
         totalAporteFinanceiro += industrias[i].aporteFinanceiro;
     }
 
-    fprintf(saida, "Aporte financeiro semestral total: %.2f\n", totalAporteFinanceiro);
+    fprintf(saida,"Aporte financeiro semestral total: R$ %.2f\n", totalAporteFinanceiro);
+    printf("\n");
 }
 
 // Função para cadastrar uma indústria

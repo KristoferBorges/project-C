@@ -1,11 +1,11 @@
 Industria com maior producao:
-Nome: Kristofer
-Regiao: Sudeste
-Producao: 100000.00
-Aporte Financeiro: 1000000.00
+ Nome: Livia
+ Regiao: Vavala
+ Producao: R$ 990000.00
+ Aporte Financeiro: R$ 90000.00
 Industria com menor producao:
-Nome: Livia
-Regiao: Vavala
-Producao: 0.00
-Aporte Financeiro: 0.00
-Aporte financeiro semestral total: 1025649.00
+ Nome: Yan_Naves
+ Regiao: Norte
+ Producao: R$ 29424.00
+ Aporte Financeiro: R$ 25649.00
+Aporte financeiro semestral total: R$ 1115649.00
