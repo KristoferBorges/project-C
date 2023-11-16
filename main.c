@@ -5,12 +5,20 @@
 #include <time.h>
 #include <float.h>
 
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
+
 // Defina macros para as cores
 #define RESET_COLOR "\x1b[0m"
 #define RED "\x1b[31m"
 #define GREEN "\x1b[32m"
 #define YELLOW "\x1b[33m"
 #define BLUE "\x1b[34m"
+
+
 
 // Função para imprimir linha centralizada com asteriscos
 void imprimirLinhaCentralizada(const char *texto) {
@@ -160,7 +168,6 @@ void encontrarMaiorProducao(struct Industria *industrias, int numIndustrias, FIL
             idxMaiorProducao = i;
         }
     }
-
     if (idxMaiorProducao != -1) {
         fprintf(saida,"Industria com maior producao:\n");
         fprintf(saida, " Nome: %s\n Regiao: %s\n Producao: R$ %.2f\n Aporte Financeiro: R$ %.2f\n",
@@ -1044,19 +1051,61 @@ void gerarRelatorioGlobal(){
     return;
 }
 
+void excluirIndustria(){
+    char procurarCNPJ[20];
+    char caminhoPasta[100];
+
+    printf("\n");
+    imprimirLinhaCentralizada(GREEN " EXCLUIR EMPRESA " RESET_COLOR);
+
+    printf(GREEN "[?] - CNPJ da Empresa: " RESET_COLOR);
+    scanf("%s", procurarCNPJ);
+
+    sprintf(caminhoPasta, "../data/industrias/industria_%s", procurarCNPJ);
+
+    #ifdef _WIN32
+        if (RemoveDirectory(caminhoPasta) != 0) {
+            printf("Empresa excluída com sucesso!\n");
+        } else {
+            printf("Erro ao excluir a empresa.\n");
+        }
+    #else
+        if (rmdir(caminhoPasta) == 0) {
+            printf("Empresa excluída com sucesso!\n");
+        } else {
+            printf("Erro ao excluir a empresa.\n");
+        }
+    #endif
+}
+
+void excluirFuncionario(){
+    
+
+    printf("\n");
+    imprimirLinhaCentralizada(GREEN " EXCLUIR FUNCIONARIO " RESET_COLOR);
+}
+
 int main() {
     if (realizarLogin()) {
         int opcao;
         while (1) {
             imprimirLinhaCentralizada(GREEN " MENU PRINCIPAL " RESET_COLOR);
             printf("\n");
-            printf(RED "(1) - " GREEN "Cadastrar Industria\n" RESET_COLOR);
-            printf(RED "(2) - " GREEN "Cadastrar Funcionario\n" RESET_COLOR);
-            printf(RED "(3) - " GREEN "Consultar Industria\n" RESET_COLOR);
-            printf(RED "(4) - " GREEN "Consultar Funcionario\n" RESET_COLOR);
-            printf(RED "(5) - " GREEN "Atualizar Relatorio " RED "(Industria)\n" RESET_COLOR);
-            printf(RED "(6) - " GREEN "Gerar Relatorio Global " RED "(Dados estatisticos)\n" RESET_COLOR);
-            printf(RED "(7) - " GREEN "Sair\n" RESET_COLOR);
+            printf(BLUE "===================================================\n" RESET_COLOR);
+            printf(RED " (1) - " GREEN "Cadastrar Industria\n" RESET_COLOR);
+            printf(RED " (2) - " GREEN "Cadastrar Funcionario\n" RESET_COLOR);
+            printf(BLUE "===================================================\n" RESET_COLOR);
+            printf(RED " (3) - " GREEN "Consultar Industria\n" RESET_COLOR);
+            printf(RED " (4) - " GREEN "Consultar Funcionario\n" RESET_COLOR);
+            printf(BLUE "===================================================\n" RESET_COLOR);
+            printf(RED " (5) - " GREEN "Excluir Industria " RED "\n" RESET_COLOR);
+            printf(RED " (6) - " GREEN "Excluir Funcionario " RED "\n" RESET_COLOR);
+            printf(BLUE "===================================================\n" RESET_COLOR);
+            printf(RED " (7) - " GREEN "Atualizar Relatorio " RED "(Industria)\n" RESET_COLOR);
+            printf(RED " (8) - " GREEN "Gerar Relatorio Global " RED "(Dados estatisticos)\n" RESET_COLOR);
+            printf(BLUE "===================================================\n" RESET_COLOR);
+            printf(RED " (0) - " GREEN "Sair\n" RESET_COLOR);
+            printf(BLUE "===================================================\n" RESET_COLOR);
             printf(GREEN "[?] - Escolha uma opcao: " RESET_COLOR);
             scanf("%d", &opcao);
             printf("\n");
@@ -1075,12 +1124,18 @@ int main() {
                     consultarFuncionario();
                     break;
                 case 5:
-                    gerarRelatorio();
+                    excluirIndustria();
                     break;
                 case 6:
-                    gerarRelatorioGlobal();
+                    excluirFuncionario();
                     break;
                 case 7:
+                    gerarRelatorio();
+                    break;
+                case 8:
+                    gerarRelatorioGlobal();
+                    break;
+                case 0:
                     printf(RED "[!] - SISTEMA ENCERRADO!\n" RESET_COLOR);
                     return 0;
                 default:
