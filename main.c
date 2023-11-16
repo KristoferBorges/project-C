@@ -842,16 +842,17 @@ void consultarFuncionario(){
 }
 
         // Imprimindo os dados
-        printf("Nome: %s\n", meuFuncionario.nome);
-        printf("CPF: %s\n", meuFuncionario.cpf);
-        printf("Data de Nascimento: %s\n", meuFuncionario.dataNascimento);
-        printf("Telefone: %s\n", meuFuncionario.telefone);
-        printf("Email: %s\n", meuFuncionario.email);
-        printf("Cargo: %s\n", meuFuncionario.cargo);
-        printf("Data de Admissao: %s\n", meuFuncionario.dataAdmissao);
-        printf("Data de Demissao: %s\n", meuFuncionario.dataDemissao);
-        printf("Salario: %s\n", meuFuncionario.salario);
-        printf("Status: %s\n", meuFuncionario.status);
+        printf("\n");
+        printf(BLUE "Nome: " RESET_COLOR "%s\n", meuFuncionario.nome);
+        printf(BLUE "CPF: " RESET_COLOR "%s\n", meuFuncionario.cpf);
+        printf(BLUE "Data de Nascimento: " RESET_COLOR "%s\n", meuFuncionario.dataNascimento);
+        printf(BLUE "Telefone: " RESET_COLOR "%s\n", meuFuncionario.telefone);
+        printf(BLUE "Email: " RESET_COLOR "%s\n", meuFuncionario.email);
+        printf(BLUE "Cargo: " RESET_COLOR "%s\n", meuFuncionario.cargo);
+        printf(BLUE "Data de Admissao: " RESET_COLOR "%s\n", meuFuncionario.dataAdmissao);
+        printf(BLUE "Data de Demissao: " RESET_COLOR "%s\n", meuFuncionario.dataDemissao);
+        printf(BLUE "Salario: " RESET_COLOR "%s\n", meuFuncionario.salario);
+        printf(BLUE "Status: " RESET_COLOR "%s\n", meuFuncionario.status);
 
         printf("\n");
     
@@ -940,21 +941,23 @@ void consultarIndustria() {
 
         // Imprimindo os dados
         printf("\n");
-        printf("CNPJ: %s\n", minhaIndustria.cnpj);
-        printf("Nome: %s\n", minhaIndustria.nome);
-        printf("Nome Fantasia: %s\n", minhaIndustria.nomeFantasia);
-        printf("Email: %s\n", minhaIndustria.email);
-        printf("Regiao: %s\n", minhaIndustria.regiao);
-        printf("Telefone: %s\n", minhaIndustria.telefone);
-        printf("Data de Abertura: %s\n", minhaIndustria.dataAbertura);
-        printf("Rua: %s\n", minhaIndustria.endereco.rua);
-        printf("Numero: %s\n", minhaIndustria.endereco.numero);
-        printf("Bairro: %s\n", minhaIndustria.endereco.bairro);
-        printf("Cidade: %s\n", minhaIndustria.endereco.cidade);
-        printf("Estado: %s\n", minhaIndustria.endereco.estado);
-        printf("CEP: %s\n", minhaIndustria.endereco.cep);
-        printf("CPF do Responsavel: %s\n", minhaIndustria.cpfResponsavel);
+        printf(BLUE "CNPJ: " RESET_COLOR "%s\n", minhaIndustria.cnpj);
+        printf(BLUE "Nome: " RESET_COLOR "%s\n", minhaIndustria.nome);
+        printf(BLUE "Nome Fantasia: " RESET_COLOR "%s\n", minhaIndustria.nomeFantasia);
+        printf(BLUE "Email: " RESET_COLOR "%s\n", minhaIndustria.email);
+        printf(BLUE "Regiao: " RESET_COLOR "%s\n", minhaIndustria.regiao);
+        printf(BLUE "Telefone: " RESET_COLOR "%s\n", minhaIndustria.telefone);
+        printf(BLUE "Data de Abertura: " RESET_COLOR "%s\n", minhaIndustria.dataAbertura);
+        printf(BLUE "Rua: " RESET_COLOR "%s\n", minhaIndustria.endereco.rua);
+        printf(BLUE "Numero: " RESET_COLOR "%s\n", minhaIndustria.endereco.numero);
+        printf(BLUE "Bairro: " RESET_COLOR "%s\n", minhaIndustria.endereco.bairro);
+        printf(BLUE "Cidade: " RESET_COLOR "%s\n", minhaIndustria.endereco.cidade);
+        printf(BLUE "Estado: " RESET_COLOR "%s\n", minhaIndustria.endereco.estado);
+        printf(BLUE "CEP: " RESET_COLOR "%s\n", minhaIndustria.endereco.cep);
+        printf(BLUE "CPF do Responsavel: " RESET_COLOR "%s\n", minhaIndustria.cpfResponsavel);
 
+        printf("\n");
+        imprimirLinhaCentralizada(GREEN " RELATORIO ATUAL " RESET_COLOR);
         printf("\n");
     }
 
@@ -974,21 +977,21 @@ void consultarIndustria() {
     fscanf(arquivoRelatorio, "%s", minhaIndustria.relatorio.descricao);
 
     // Imprimindo os dados
-    printf("Data: %s\n", minhaIndustria.relatorio.data);
-    printf("Insumos Tratados 1 Mes: R$ %s\n", minhaIndustria.relatorio.insumosTratadosM1);
-    printf("Total Gasto Mensal: R$ %s\n\n", minhaIndustria.relatorio.totalGastoM1);
-    printf("Insumos Tratados 2 Mes: R$ %s\n", minhaIndustria.relatorio.insumosTratadosM2);
-    printf("Total Gasto Mensal: R$ %s\n\n", minhaIndustria.relatorio.totalGastoM2);
-    printf("Insumos Tratados 3 Mes: R$ %s\n", minhaIndustria.relatorio.insumosTratadosM3);
-    printf("Total Gasto Mensal: R$ %s\n\n", minhaIndustria.relatorio.totalGastoM3);
-    printf("Insumos Tratados 4 Mes: R$ %s\n", minhaIndustria.relatorio.insumosTratadosM4);
-    printf("Total Gasto Mensal: R$ %s\n\n", minhaIndustria.relatorio.totalGastoM4);
-    printf("Insumos Tratados 5 Mes: R$ %s\n", minhaIndustria.relatorio.insumosTratadosM5);
-    printf("Total Gasto Mensal: R$ %s\n\n", minhaIndustria.relatorio.totalGastoM5);
-    printf("Insumos Tratados 6 Mes: R$ %s\n", minhaIndustria.relatorio.insumosTratadosM6);
-    printf("Total Gasto Mensal: R$ %s\n\n", minhaIndustria.relatorio.totalGastoM6);
+    printf(BLUE "Data: %s\n", minhaIndustria.relatorio.data);
+    printf(BLUE "Insumos Tratados 1 Mes: " RESET_COLOR "R$ %s\n", minhaIndustria.relatorio.insumosTratadosM1);
+    printf(BLUE "Total Gasto Mensal: " RESET_COLOR "R$ %s\n\n", minhaIndustria.relatorio.totalGastoM1);
+    printf(BLUE "Insumos Tratados 2 Mes: " RESET_COLOR "R$ %s\n", minhaIndustria.relatorio.insumosTratadosM2);
+    printf(BLUE "Total Gasto Mensal: " RESET_COLOR "R$ %s\n\n", minhaIndustria.relatorio.totalGastoM2);
+    printf(BLUE "Insumos Tratados 3 Mes: " RESET_COLOR "R$ %s\n", minhaIndustria.relatorio.insumosTratadosM3);
+    printf(BLUE "Total Gasto Mensal: " RESET_COLOR "R$ %s\n\n", minhaIndustria.relatorio.totalGastoM3);
+    printf(BLUE "Insumos Tratados 4 Mes: " RESET_COLOR "R$ %s\n", minhaIndustria.relatorio.insumosTratadosM4);
+    printf(BLUE "Total Gasto Mensal: " RESET_COLOR "R$ %s\n\n", minhaIndustria.relatorio.totalGastoM4);
+    printf(BLUE "Insumos Tratados 5 Mes: " RESET_COLOR "R$ %s\n", minhaIndustria.relatorio.insumosTratadosM5);
+    printf(BLUE "Total Gasto Mensal: " RESET_COLOR "R$ %s\n\n", minhaIndustria.relatorio.totalGastoM5);
+    printf(BLUE "Insumos Tratados 6 Mes: " RESET_COLOR "R$ %s\n", minhaIndustria.relatorio.insumosTratadosM6);
+    printf(BLUE "Total Gasto Mensal: " RESET_COLOR "R$ %s\n\n", minhaIndustria.relatorio.totalGastoM6);
     
-    printf("Descricao: %s\n", minhaIndustria.relatorio.descricao);
+    printf(BLUE "Descricao: " RESET_COLOR "%s\n", minhaIndustria.relatorio.descricao);
     
     // Fechando o arquivo
     fclose(arquivo);

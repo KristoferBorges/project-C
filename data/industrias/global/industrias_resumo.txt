@@ -13,3 +13,8 @@ Nome: Yan_Naves
 Regiao: Norte
 Producao: 29424.00
 AporteFinanceiro: 25649.00
+CNPJ: 8888
+Nome: Joelma_ARES
+Regiao: California
+Producao: 22535.00
+AporteFinanceiro: 25627.00
