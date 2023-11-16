@@ -1,42 +1,14 @@
 [15/11/2023]
-2442
-465
-8447
-769
-5848
-8978
-3945
-9529
-6611
-1194
-6488
-4080
-Relatorio_gerado_pelo_sistema.
-[15/11/2023]
-2442
-465
-8447
-769
-5848
-8978
-3945
-9529
-6611
-1194
-6488
-4080
-Relatorio_gerado_pelo_sistema.
-[15/11/2023]
-2442
-465
-8447
-769
-5848
-8978
-3945
-9529
-6611
-1194
-6488
-4080
-Relatorio_gerado_pelo_sistema.
+Mês 1: R$ 2442
+Valor Gasto: R$ 465
+Mês 2: R$ 8447
+Valor Gasto: R$ 769
+Mês 3: R$ 5848
+Valor Gasto: R$ 8978
+Mês 4: R$ 3945
+Valor Gasto: R$ 9529
+Mês 5: R$ 6611
+Valor Gasto: R$ 1194
+Mês 6: R$ 6488
+Valor Gasto: R$ 4080
+Descricao: Relatorio_gerado_pelo_sistema.

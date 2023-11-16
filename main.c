@@ -49,6 +49,7 @@ struct Industria {
     char nomeFantasia[50];
     char cnpj[15];
     char email[50];
+    char regiao[50];
     char telefone[15];
     char dataAbertura[15];
     char cpfResponsavel[50];
@@ -154,6 +155,8 @@ void cadastrarIndustria() {
     printf(GREEN "[?] - Email: " RESET_COLOR);
     scanf("%s", industria.email);
 
+    printf(GREEN "[?] - Regiao: " RESET_COLOR);
+    scanf("%s", industria.regiao);
 
     imprimirLinhaCentralizada(GREEN " ENDERECO DA EMPRESA " RESET_COLOR);
 
@@ -212,6 +215,7 @@ void cadastrarIndustria() {
     cifraCesar(industria.nome, chave);
     cifraCesar(industria.nomeFantasia, chave);
     cifraCesar(industria.email, chave);
+    cifraCesar(industria.regiao, chave);
     cifraCesar(industria.telefone, chave);
     cifraCesar(industria.dataAbertura, chave);
     cifraCesar(industria.cpfResponsavel, chave);
@@ -227,6 +231,7 @@ void cadastrarIndustria() {
     fprintf(arquivo, "%s\n", industria.nome);
     fprintf(arquivo, "%s\n", industria.nomeFantasia);
     fprintf(arquivo, "%s\n", industria.email);
+    fprintf(arquivo, "%s\n", industria.regiao);
     fprintf(arquivo, "%s\n", industria.telefone);
     fprintf(arquivo, "%s\n", industria.dataAbertura);
     fprintf(arquivo, "%s\n", industria.endereco.rua);
@@ -283,7 +288,25 @@ void cadastrarIndustria() {
     fprintf(arquivoRelatorio, "%d\n", gastoM6);
     fprintf(arquivoRelatorio, "%s\n", "Relatorio_gerado_pelo_sistema.");
     fclose(arquivoRelatorio);
-    printf("\n");
+
+    // Importando informações para o relatório global (formatação)
+    double producaoTotal = (gastoM1 + gastoM2 + gastoM3 + gastoM4 + gastoM5 + gastoM6);
+    double aporteFinanceiro = (mes1 + mes2 + mes3 + mes4 + mes5 + mes6);
+
+    // Importando informações para o relatório global
+    char caminhoArquivoGlobal[100];
+    sprintf(caminhoArquivoGlobal, "../data/industrias/global/industrias_resumo.txt");
+
+    FILE *arquivoGlobal = fopen(caminhoArquivoGlobal, "a");
+    decifraCesar(industria.cnpj, chave);
+    decifraCesar(industria.nome, chave);
+    decifraCesar(industria.regiao, chave);
+    fprintf(arquivoGlobal, "CNPJ: %s\n", industria.cnpj);
+    fprintf(arquivoGlobal, "Nome: %s\n", industria.nome);
+    fprintf(arquivoGlobal, "Regiao: %s\n", industria.regiao);
+    fprintf(arquivoGlobal, "Producao: %.2f\n", producaoTotal);
+    fprintf(arquivoGlobal, "AporteFinanceiro: %.2f\n", aporteFinanceiro);
+    fclose(arquivoGlobal);
 
 }
 
@@ -318,19 +341,19 @@ void novoRelatorio(char caminhoBackup[100], char caminhoRelatorio[100]){
     // Inserindo informações no arquivo de backup
     FILE *arquivoRelatorioBackup = fopen(caminhoBackup, "a");
     fprintf(arquivoRelatorioBackup, "[%s]\n", relatorioIndustriaBackup.relatorio.data);
-    fprintf(arquivoRelatorioBackup, "%s\n", relatorioIndustriaBackup.relatorio.insumosTratadosM1);
-    fprintf(arquivoRelatorioBackup, "%s\n", relatorioIndustriaBackup.relatorio.totalGastoM1);
-    fprintf(arquivoRelatorioBackup, "%s\n", relatorioIndustriaBackup.relatorio.insumosTratadosM2);
-    fprintf(arquivoRelatorioBackup, "%s\n", relatorioIndustriaBackup.relatorio.totalGastoM2);
-    fprintf(arquivoRelatorioBackup, "%s\n", relatorioIndustriaBackup.relatorio.insumosTratadosM3);
-    fprintf(arquivoRelatorioBackup, "%s\n", relatorioIndustriaBackup.relatorio.totalGastoM3);
-    fprintf(arquivoRelatorioBackup, "%s\n", relatorioIndustriaBackup.relatorio.insumosTratadosM4);
-    fprintf(arquivoRelatorioBackup, "%s\n", relatorioIndustriaBackup.relatorio.totalGastoM4);
-    fprintf(arquivoRelatorioBackup, "%s\n", relatorioIndustriaBackup.relatorio.insumosTratadosM5);
-    fprintf(arquivoRelatorioBackup, "%s\n", relatorioIndustriaBackup.relatorio.totalGastoM5);
-    fprintf(arquivoRelatorioBackup, "%s\n", relatorioIndustriaBackup.relatorio.insumosTratadosM6);
-    fprintf(arquivoRelatorioBackup, "%s\n", relatorioIndustriaBackup.relatorio.totalGastoM6);
-    fprintf(arquivoRelatorioBackup, "%s\n", relatorioIndustriaBackup.relatorio.descricao);
+    fprintf(arquivoRelatorioBackup, "Mês 1: R$ %s\n", relatorioIndustriaBackup.relatorio.insumosTratadosM1);
+    fprintf(arquivoRelatorioBackup, "Valor Gasto: R$ %s\n", relatorioIndustriaBackup.relatorio.totalGastoM1);
+    fprintf(arquivoRelatorioBackup, "Mês 2: R$ %s\n", relatorioIndustriaBackup.relatorio.insumosTratadosM2);
+    fprintf(arquivoRelatorioBackup, "Valor Gasto: R$ %s\n", relatorioIndustriaBackup.relatorio.totalGastoM2);
+    fprintf(arquivoRelatorioBackup, "Mês 3: R$ %s\n", relatorioIndustriaBackup.relatorio.insumosTratadosM3);
+    fprintf(arquivoRelatorioBackup, "Valor Gasto: R$ %s\n", relatorioIndustriaBackup.relatorio.totalGastoM3);
+    fprintf(arquivoRelatorioBackup, "Mês 4: R$ %s\n", relatorioIndustriaBackup.relatorio.insumosTratadosM4);
+    fprintf(arquivoRelatorioBackup, "Valor Gasto: R$ %s\n", relatorioIndustriaBackup.relatorio.totalGastoM4);
+    fprintf(arquivoRelatorioBackup, "Mês 5: R$ %s\n", relatorioIndustriaBackup.relatorio.insumosTratadosM5);
+    fprintf(arquivoRelatorioBackup, "Valor Gasto: R$ %s\n", relatorioIndustriaBackup.relatorio.totalGastoM5);
+    fprintf(arquivoRelatorioBackup, "Mês 6: R$ %s\n", relatorioIndustriaBackup.relatorio.insumosTratadosM6);
+    fprintf(arquivoRelatorioBackup, "Valor Gasto: R$ %s\n", relatorioIndustriaBackup.relatorio.totalGastoM6);
+    fprintf(arquivoRelatorioBackup, "Descricao: %s\n", relatorioIndustriaBackup.relatorio.descricao);
 
     // Fechando o arquivo
     fclose(arquivoRelatorioBackup);
@@ -642,6 +665,9 @@ void consultarIndustria() {
         fscanf(arquivo, "%s", minhaIndustria.email);
         decifraCesar(minhaIndustria.email, chave);
 
+        fscanf(arquivo, "%s", minhaIndustria.regiao);
+        decifraCesar(minhaIndustria.regiao, chave);
+
         fscanf(arquivo, "%s", minhaIndustria.telefone);
         decifraCesar(minhaIndustria.telefone, chave);
 
@@ -670,10 +696,12 @@ void consultarIndustria() {
         decifraCesar(minhaIndustria.cpfResponsavel, chave);
 
         // Imprimindo os dados
+        printf("\n");
         printf("CNPJ: %s\n", minhaIndustria.cnpj);
         printf("Nome: %s\n", minhaIndustria.nome);
         printf("Nome Fantasia: %s\n", minhaIndustria.nomeFantasia);
         printf("Email: %s\n", minhaIndustria.email);
+        printf("Regiao: %s\n", minhaIndustria.regiao);
         printf("Telefone: %s\n", minhaIndustria.telefone);
         printf("Data de Abertura: %s\n", minhaIndustria.dataAbertura);
         printf("Rua: %s\n", minhaIndustria.endereco.rua);
@@ -761,7 +789,7 @@ int main() {
                     printf(RED "[!] - SISTEMA ENCERRADO!\n" RESET_COLOR);
                     return 0;
                 default:
-                    printf(RED "[!] - Opção invalida. Tente novamente.\n" RESET_COLOR);
+                    printf(RED "[!] - Opcao invalida. Tente novamente.\n" RESET_COLOR);
             }
         }
     } else {
