@@ -444,7 +444,87 @@ void realizarBackup(char caminhoArquivoRelatorioBackup[100], char caminhoRelator
     return;
 }
 
-void atualizarRelatorio(char caminhoArquivoRelatorio[100], char dataFormatada[15]){
+void alterarInformacoes(const char *cnpjAlvo, const double novoValorProducao, const double novoValorAporte) {
+    FILE *arquivoEntrada, *arquivoSaida;
+    char linha[1000];
+    char arquivoEntradaNome[100] = "../data/industrias/global/industrias_resumo.txt";
+    char arquivoSaidaNome[100] = "temp.txt"; // Nome temporário para o arquivo de saída
+
+    arquivoEntrada = fopen(arquivoEntradaNome, "r");
+    arquivoSaida = fopen(arquivoSaidaNome, "w");
+
+    if (arquivoEntrada == NULL) {
+        printf(RED "[!] - Erro ao abrir o arquivo de entrada\n" RESET_COLOR);
+        return;
+    }
+
+    if (arquivoSaida == NULL) {
+        printf(RED "[!] - Erro ao criar o arquivo de saída\n" RESET_COLOR);
+        fclose(arquivoEntrada);
+        return;
+    }
+
+    int cnpjEncontrado = 0; // Flag para indicar se o CNPJ alvo foi encontrado
+    int ignorarLinhas = 0; // Flag para indicar se as próximas linhas devem ser ignoradas
+
+    while (fgets(linha, sizeof(linha), arquivoEntrada) != NULL) {
+        // Se as próximas linhas devem ser ignoradas, pula para a próxima iteração
+        if (ignorarLinhas) {
+            ignorarLinhas = 0;
+            continue;
+        }
+
+        // Procura por CNPJ no formato desejado
+        if (strstr(linha, "CNPJ: ") == linha) {
+            char cnpj[20];
+            sscanf(linha, "CNPJ: %s", cnpj);
+
+            if (strcmp(cnpj, cnpjAlvo) == 0) {
+                // Encontrou o CNPJ desejado, faz as alterações nas linhas seguintes
+                fprintf(arquivoSaida, "CNPJ: %s\n", cnpj);
+
+                fgets(linha, sizeof(linha), arquivoEntrada); // Pula a linha "Nome: ..."
+                fprintf(arquivoSaida, "%s", linha);
+
+                fgets(linha, sizeof(linha), arquivoEntrada); // Pula a linha "Regiao: ..."
+                fprintf(arquivoSaida, "%s", linha);
+
+                // Altera a linha "Producao: ..."
+                fprintf(arquivoSaida, "Producao: %.2f\n", novoValorProducao);
+
+                // Altera a linha "AporteFinanceiro: ..."
+                fgets(linha, sizeof(linha), arquivoEntrada); // Pula a linha original
+                fprintf(arquivoSaida, "AporteFinanceiro: %.2f\n", novoValorAporte);
+
+                cnpjEncontrado = 1; // Indica que o CNPJ alvo foi encontrado
+
+                // Marca as próximas 2 linhas para serem ignoradas
+                ignorarLinhas = 1;
+            } else {
+                // Se não é o CNPJ alvo, apenas copia a linha para o arquivo de saída
+                fputs(linha, arquivoSaida);
+            }
+        } else {
+            // Se a linha não começa com "CNPJ: ", apenas copia para o arquivo de saída
+            fputs(linha, arquivoSaida);
+        }
+    }
+
+    fclose(arquivoEntrada);
+    fclose(arquivoSaida);
+
+    // Se o CNPJ alvo não foi encontrado, remove o arquivo de saída
+    if (!cnpjEncontrado) {
+        remove(arquivoSaidaNome);
+    } else {
+        // Renomeia o arquivo temporário para o nome original
+        remove(arquivoEntradaNome);
+        rename(arquivoSaidaNome, arquivoEntradaNome);
+    }
+}
+
+
+void atualizarRelatorio(char procurarCNPJ[20], char caminhoArquivoRelatorio[100], char dataFormatada[15]){
     printf("\n");
     imprimirLinhaCentralizada(GREEN " ATUALIZAR RELATORIO " RESET_COLOR);
     printf("\n");
@@ -498,6 +578,10 @@ void atualizarRelatorio(char caminhoArquivoRelatorio[100], char dataFormatada[15
     scanf("%s", relatorioIndustria.relatorio.descricao);
     printf("\n");
 
+    // Somar os valores obtidos
+    double procucaoTotal = atof(relatorioIndustria.relatorio.insumosTratadosM1) + atof(relatorioIndustria.relatorio.insumosTratadosM2) + atof(relatorioIndustria.relatorio.insumosTratadosM3) + atof(relatorioIndustria.relatorio.insumosTratadosM4) + atof(relatorioIndustria.relatorio.insumosTratadosM5) + atof(relatorioIndustria.relatorio.insumosTratadosM6);
+    double gastoTotal = atof(relatorioIndustria.relatorio.totalGastoM1) + atof(relatorioIndustria.relatorio.totalGastoM2) + atof(relatorioIndustria.relatorio.totalGastoM3) + atof(relatorioIndustria.relatorio.totalGastoM4) + atof(relatorioIndustria.relatorio.totalGastoM5) + atof(relatorioIndustria.relatorio.totalGastoM6);
+
     // Salvando os dados no arquivo (relatorio principal)
     FILE *arquivoRelatorioAtualizado = fopen(caminhoArquivoRelatorio, "w");
     fprintf(arquivoRelatorioAtualizado, "%s\n", dataFormatada);
@@ -516,8 +600,8 @@ void atualizarRelatorio(char caminhoArquivoRelatorio[100], char dataFormatada[15
     fprintf(arquivoRelatorioAtualizado, "%s\n", relatorioIndustria.relatorio.descricao);
     fclose(arquivoRelatorioAtualizado);
 
-    // Mensagem de finalização
-    printf(GREEN "[!] - Relatorio global atualizado com sucesso!\n" RESET_COLOR);
+    // Passando como parâmetro as informações para alteração (relatorio global)
+    alterarInformacoes(procurarCNPJ, procucaoTotal, gastoTotal);
 
 }
 
@@ -609,7 +693,7 @@ void gerarRelatorio() {
 
         switch (opcao) {
             case 1:
-                atualizarRelatorio(caminhoArquivoRelatorio, dataFormatada);
+                atualizarRelatorio(procurarCNPJ, caminhoArquivoRelatorio, dataFormatada);
                 break;
             case 2:
                 realizarBackup(caminhoArquivoRelatorioBackup, caminhoArquivoRelatorio);
@@ -922,7 +1006,7 @@ void gerarRelatorioGlobal(){
 
     const char *nomeArquivo = "../data/industrias/global/industrias_resumo.txt";
     char nomeArquivoSaida[50];
-    sprintf(nomeArquivoSaida, "../data/industrias/global/resultados/resultados_%s.txt", dataFormatada);
+    sprintf(nomeArquivoSaida, "../data/industrias/global/resultados/relatorio_global.txt");
 
     struct Industria industrias[100];
     int numIndustrias = 0;
