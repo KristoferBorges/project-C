@@ -1,0 +1,11 @@
+Indústria com maior produção:
+Nome: EmpresaX
+Região: Sudeste
+Produção: 40000.00
+Aporte Financeiro: 30000.00
+Indústria com menor produção:
+Nome: Quatro
+Região: Sudeste
+Produção: 11582.00
+Aporte Financeiro: 22456.00
+Aporte financeiro semestral total: 123186.00

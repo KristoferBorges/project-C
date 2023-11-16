@@ -34,7 +34,7 @@ void lerIndustrias(const char *nomeArquivo, struct Industria *industrias, int *n
 }
 
 // Função para encontrar a indústria que tratou o maior volume de resíduos industriais
-void encontrarMaiorProducao(struct Industria *industrias, int numIndustrias) {
+void encontrarMaiorProducao(struct Industria *industrias, int numIndustrias, FILE *saida) {
     float maxProducao = -FLT_MAX;
     int idxMaiorProducao = -1;
 
@@ -44,18 +44,19 @@ void encontrarMaiorProducao(struct Industria *industrias, int numIndustrias) {
             idxMaiorProducao = i;
         }
     }
+
     if (idxMaiorProducao != -1) {
-        printf("\nIndustria com maior producao:\n");
-        printf("Nome: %s\nRegiao: %s\nProducao: %.2f\nAporte Financeiro: %.2f\n",
+        fprintf(saida, "Indústria com maior produção:\n");
+        fprintf(saida, "Nome: %s\nRegião: %s\nProdução: %.2f\nAporte Financeiro: %.2f\n",
                industrias[idxMaiorProducao].nome, industrias[idxMaiorProducao].regiao,
                industrias[idxMaiorProducao].producao, industrias[idxMaiorProducao].aporteFinanceiro);
     } else {
-        printf("Nenhuma industria encontrada.\n");
+        fprintf(saida, "Nenhuma indústria encontrada.\n");
     }
 }
 
 // Função para encontrar a indústria que menos produziu
-void encontrarMenorProducao(struct Industria *industrias, int numIndustrias) {
+void encontrarMenorProducao(struct Industria *industrias, int numIndustrias, FILE *saida) {
     float minProducao = FLT_MAX;
     int idxMenorProducao = -1;
 
@@ -67,36 +68,45 @@ void encontrarMenorProducao(struct Industria *industrias, int numIndustrias) {
     }
 
     if (idxMenorProducao != -1) {
-        printf("\nIndustria com menor producao:\n");
-        printf("Nome: %s\nRegiao: %s\nProducao: %.2f\nAporte Financeiro: %.2f\n",
+        fprintf(saida, "Indústria com menor produção:\n");
+        fprintf(saida, "Nome: %s\nRegião: %s\nProdução: %.2f\nAporte Financeiro: %.2f\n",
                industrias[idxMenorProducao].nome, industrias[idxMenorProducao].regiao,
                industrias[idxMenorProducao].producao, industrias[idxMenorProducao].aporteFinanceiro);
     } else {
-        printf("Nenhuma industria encontrada.\n");
+        fprintf(saida, "Nenhuma indústria encontrada.\n");
     }
 }
 
 // Função para calcular o aporte financeiro semestral
-void calcularAporteFinanceiroSemestral(struct Industria *industrias, int numIndustrias) {
+void calcularAporteFinanceiroSemestral(struct Industria *industrias, int numIndustrias, FILE *saida) {
     float totalAporteFinanceiro = 0.0;
 
     for (int i = 0; i < numIndustrias; i++) {
         totalAporteFinanceiro += industrias[i].aporteFinanceiro;
     }
 
-    printf("\nAporte financeiro semestral total: %.2f\n", totalAporteFinanceiro);
+    fprintf(saida, "Aporte financeiro semestral total: %.2f\n", totalAporteFinanceiro);
 }
 
 int main() {
-    const char *nomeArquivo = "../data/industrias/global/industrias_resumo.txt";
+    const char *nomeArquivo = "industrias.txt";
+    const char *nomeArquivoSaida = "resultados.txt";
     struct Industria industrias[100]; // Assumindo um máximo de 100 indústrias, ajuste conforme necessário
     int numIndustrias = 0;
 
+    FILE *saida = fopen(nomeArquivoSaida, "w");
+    if (saida == NULL) {
+        printf("Erro ao criar o arquivo de saída.\n");
+        exit(EXIT_FAILURE);
+    }
+
     lerIndustrias(nomeArquivo, industrias, &numIndustrias);
 
-    encontrarMaiorProducao(industrias, numIndustrias);
-    encontrarMenorProducao(industrias, numIndustrias);
-    calcularAporteFinanceiroSemestral(industrias, numIndustrias);
+    encontrarMaiorProducao(industrias, numIndustrias, saida);
+    encontrarMenorProducao(industrias, numIndustrias, saida);
+    calcularAporteFinanceiroSemestral(industrias, numIndustrias, saida);
+
+    fclose(saida);
 
     return 0;
 }

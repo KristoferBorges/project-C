@@ -3,6 +3,7 @@
 #include <string.h>
 #include <direct.h>
 #include <time.h>
+#include <float.h>
 
 // Defina macros para as cores
 #define RESET_COLOR "\x1b[0m"
@@ -53,6 +54,8 @@ struct Industria {
     char telefone[15];
     char dataAbertura[15];
     char cpfResponsavel[50];
+    float producao;
+    float aporteFinanceiro;
 
     struct Endereco {
         char rua[50];
@@ -123,6 +126,82 @@ int realizarLogin() {
     } while (!sucessoLogin);
 
     return 1;
+}
+
+// Função para ler as informações da indústria a partir de um arquivo
+void lerIndustrias(const char *nomeArquivo, struct Industria *industrias, int *numIndustrias) {
+    FILE *arquivo = fopen(nomeArquivo, "r");
+
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo %s.\n", nomeArquivo);
+        exit(EXIT_FAILURE);
+    }
+
+    int i = 0;
+    while (fscanf(arquivo, "CNPJ: %s\nNome: %s\nRegiao: %s\nProducao: %f\nAporteFinanceiro: %f\n",
+                  industrias[i].cnpj, industrias[i].nome, industrias[i].regiao,
+                  &(industrias[i].producao), &(industrias[i].aporteFinanceiro)) == 5) {
+        i++;
+    }
+
+    *numIndustrias = i;
+
+    fclose(arquivo);
+}
+
+// Função para encontrar a indústria que tratou o maior volume de resíduos industriais
+void encontrarMaiorProducao(struct Industria *industrias, int numIndustrias, FILE *saida) {
+    float maxProducao = -FLT_MAX;
+    int idxMaiorProducao = -1;
+
+    for (int i = 0; i < numIndustrias; i++) {
+        if (industrias[i].producao > maxProducao) {
+            maxProducao = industrias[i].producao;
+            idxMaiorProducao = i;
+        }
+    }
+
+    if (idxMaiorProducao != -1) {
+        fprintf(saida, "Indústria com maior produção:\n");
+        fprintf(saida, "Nome: %s\nRegião: %s\nProdução: %.2f\nAporte Financeiro: %.2f\n",
+               industrias[idxMaiorProducao].nome, industrias[idxMaiorProducao].regiao,
+               industrias[idxMaiorProducao].producao, industrias[idxMaiorProducao].aporteFinanceiro);
+    } else {
+        fprintf(saida, "Nenhuma indústria encontrada.\n");
+    }
+}
+
+// Função para encontrar a indústria que menos produziu
+void encontrarMenorProducao(struct Industria *industrias, int numIndustrias, FILE *saida) {
+    float minProducao = FLT_MAX;
+    int idxMenorProducao = -1;
+
+    for (int i = 0; i < numIndustrias; i++) {
+        if (industrias[i].producao < minProducao) {
+            minProducao = industrias[i].producao;
+            idxMenorProducao = i;
+        }
+    }
+
+    if (idxMenorProducao != -1) {
+        fprintf(saida, "Indústria com menor produção:\n");
+        fprintf(saida, "Nome: %s\nRegião: %s\nProdução: %.2f\nAporte Financeiro: %.2f\n",
+               industrias[idxMenorProducao].nome, industrias[idxMenorProducao].regiao,
+               industrias[idxMenorProducao].producao, industrias[idxMenorProducao].aporteFinanceiro);
+    } else {
+        fprintf(saida, "Nenhuma indústria encontrada.\n");
+    }
+}
+
+// Função para calcular o aporte financeiro semestral
+void calcularAporteFinanceiroSemestral(struct Industria *industrias, int numIndustrias, FILE *saida) {
+    float totalAporteFinanceiro = 0.0;
+
+    for (int i = 0; i < numIndustrias; i++) {
+        totalAporteFinanceiro += industrias[i].aporteFinanceiro;
+    }
+
+    fprintf(saida, "Aporte financeiro semestral total: %.2f\n", totalAporteFinanceiro);
 }
 
 // Função para cadastrar uma indústria
@@ -752,6 +831,41 @@ void consultarIndustria() {
     fclose(arquivoRelatorio);
 };
 
+void gerarRelatorioGlobal(){
+    // Pega a data atual
+    time_t t;
+    struct tm *dataHoraAtual;
+
+    time(&t);
+    dataHoraAtual = localtime(&t);
+    char dataFormatada[20];
+    strftime(dataFormatada, sizeof(dataFormatada), "%Y-%m-%d", dataHoraAtual);
+
+    const char *nomeArquivo = "../data/industrias/global/industrias_resumo.txt";
+    char nomeArquivoSaida[50];
+    sprintf(nomeArquivoSaida, "../data/industrias/global/resultados/resultados_%s.txt", dataFormatada);
+
+    struct Industria industrias[100];
+    int numIndustrias = 0;
+
+    FILE *saida = fopen(nomeArquivoSaida, "w");
+    if (saida == NULL) {
+        printf(RED "[!] - Erro ao criar o arquivo de saida.\n" RESET_COLOR);
+        exit(EXIT_FAILURE);
+    } else {
+        printf(GREEN "[!] - Relatorio global criado com sucesso.\n" RESET_COLOR);
+    }
+
+    lerIndustrias(nomeArquivo, industrias, &numIndustrias);
+
+    encontrarMaiorProducao(industrias, numIndustrias, saida);
+    encontrarMenorProducao(industrias, numIndustrias, saida);
+    calcularAporteFinanceiroSemestral(industrias, numIndustrias, saida);
+
+    fclose(saida);
+
+    return;
+}
 
 int main() {
     if (realizarLogin()) {
@@ -764,7 +878,8 @@ int main() {
             printf(RED "(3) - " GREEN "Consultar Industria\n" RESET_COLOR);
             printf(RED "(4) - " GREEN "Consultar Funcionario\n" RESET_COLOR);
             printf(RED "(5) - " GREEN "Gerar Relatorio\n" RESET_COLOR);
-            printf(RED "(6) - " GREEN "Sair\n" RESET_COLOR);
+            printf(RED "(6) - " GREEN "Gerar Relatorio Global\n" RESET_COLOR);
+            printf(RED "(7) - " GREEN "Sair\n" RESET_COLOR);
             printf(GREEN "[?] - Escolha uma opcao: " RESET_COLOR);
             scanf("%d", &opcao);
             printf("\n");
@@ -786,6 +901,9 @@ int main() {
                     gerarRelatorio();
                     break;
                 case 6:
+                    gerarRelatorioGlobal();
+                    break;
+                case 7:
                     printf(RED "[!] - SISTEMA ENCERRADO!\n" RESET_COLOR);
                     return 0;
                 default:
