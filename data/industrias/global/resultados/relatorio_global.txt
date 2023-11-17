@@ -1,11 +1,11 @@
 Industria com maior producao:
- Nome: Kristofer
+ Nome: Teste
  Regiao: Sudeste
- Producao: R$ 88050000.00
- Aporte Financeiro: R$ 406000.00
+ Producao: R$ 47182.00
+ Aporte Financeiro: R$ 31308.00
 Industria com menor producao:
- Nome: Yan_Naves
- Regiao: Norte
+ Nome: Kristofer_LTDA
+ Regiao: SP
  Producao: R$ 0.00
  Aporte Financeiro: R$ 0.00
-Aporte financeiro semestral total: R$ 521627.00
+Aporte financeiro semestral total: R$ 124564.00

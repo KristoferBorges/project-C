@@ -128,7 +128,7 @@ int realizarLogin() {
     return 1;
 }
 
-// Função para ler as informações da indústria a partir de um arquivo
+// Função para ler as informações da indústria
 void lerIndustrias(const char *nomeArquivo, struct Industria *industrias, int *numIndustrias) {
     FILE *arquivo = fopen(nomeArquivo, "r");
 
@@ -336,18 +336,18 @@ void cadastrarIndustria() {
     // Geração de informações para Insumos Tratados e Total Gasto Mensal
     srand((unsigned int)time(NULL));
 
-    int mes1 = rand() % 10001; // Gera um número entre 0 e 10000
-    int gastoM1 = rand() % 10001; // Gera um número entre 0 e 10000
-    int mes2 = rand() % 10001; // Gera um número entre 0 e 10000
-    int gastoM2 = rand() % 10001; // Gera um número entre 0 e 10000
-    int mes3 = rand() % 10001; // Gera um número entre 0 e 10000
-    int gastoM3 = rand() % 10001; // Gera um número entre 0 e 10000
-    int mes4 = rand() % 10001; // Gera um número entre 0 e 10000
-    int gastoM4 = rand() % 10001; // Gera um número entre 0 e 10000
-    int mes5 = rand() % 10001; // Gera um número entre 0 e 10000
-    int gastoM5 = rand() % 10001; // Gera um número entre 0 e 10000
-    int mes6 = rand() % 10001; // Gera um número entre 0 e 10000
-    int gastoM6 = rand() % 10001; // Gera um número entre 0 e 10000
+    int mes1 = rand() % 10001;
+    int gastoM1 = rand() % 10001;
+    int mes2 = rand() % 10001;
+    int gastoM2 = rand() % 10001;
+    int mes3 = rand() % 10001;
+    int gastoM3 = rand() % 10001;
+    int mes4 = rand() % 10001;
+    int gastoM4 = rand() % 10001;
+    int mes5 = rand() % 10001;
+    int gastoM5 = rand() % 10001;
+    int mes6 = rand() % 10001;
+    int gastoM6 = rand() % 10001;
 
 
     // Salvando os dados da empresa em um arquivo (Relatorio)
@@ -415,8 +415,6 @@ void realizarBackup(char caminhoArquivoRelatorioBackup[100], char caminhoRelator
     // Fechando o arquivo
     fclose(arquivoRelatorio);
 
-    // Formatação dos dados antes do Backup
-
     // Inserindo informações no arquivo de backup
     FILE *arquivoRelatorioBackup = fopen(caminhoArquivoRelatorioBackup, "a");
     fprintf(arquivoRelatorioBackup, "[%s]\n", relatorioIndustriaBackup.relatorio.data);
@@ -448,7 +446,7 @@ void alterarInformacoes(const char *cnpjAlvo, const double novoValorProducao, co
     FILE *arquivoEntrada, *arquivoSaida;
     char linha[1000];
     char arquivoEntradaNome[100] = "../data/industrias/global/industrias_resumo.txt";
-    char arquivoSaidaNome[100] = "temp.txt"; // Nome temporário para o arquivo de saída
+    char arquivoSaidaNome[100] = "temp.txt";
 
     arquivoEntrada = fopen(arquivoEntradaNome, "r");
     arquivoSaida = fopen(arquivoSaidaNome, "w");
@@ -464,11 +462,10 @@ void alterarInformacoes(const char *cnpjAlvo, const double novoValorProducao, co
         return;
     }
 
-    int cnpjEncontrado = 0; // Flag para indicar se o CNPJ alvo foi encontrado
-    int ignorarLinhas = 0; // Flag para indicar se as próximas linhas devem ser ignoradas
+    int cnpjEncontrado = 0;
+    int ignorarLinhas = 0;
 
     while (fgets(linha, sizeof(linha), arquivoEntrada) != NULL) {
-        // Se as próximas linhas devem ser ignoradas, pula para a próxima iteração
         if (ignorarLinhas) {
             ignorarLinhas = 0;
             continue;
@@ -480,32 +477,26 @@ void alterarInformacoes(const char *cnpjAlvo, const double novoValorProducao, co
             sscanf(linha, "CNPJ: %s", cnpj);
 
             if (strcmp(cnpj, cnpjAlvo) == 0) {
-                // Encontrou o CNPJ desejado, faz as alterações nas linhas seguintes
                 fprintf(arquivoSaida, "CNPJ: %s\n", cnpj);
 
-                fgets(linha, sizeof(linha), arquivoEntrada); // Pula a linha "Nome: ..."
+                fgets(linha, sizeof(linha), arquivoEntrada);
                 fprintf(arquivoSaida, "%s", linha);
 
-                fgets(linha, sizeof(linha), arquivoEntrada); // Pula a linha "Regiao: ..."
+                fgets(linha, sizeof(linha), arquivoEntrada);
                 fprintf(arquivoSaida, "%s", linha);
 
-                // Altera a linha "Producao: ..."
                 fprintf(arquivoSaida, "Producao: %.2f\n", novoValorProducao);
 
-                // Altera a linha "AporteFinanceiro: ..."
-                fgets(linha, sizeof(linha), arquivoEntrada); // Pula a linha original
+                fgets(linha, sizeof(linha), arquivoEntrada);
                 fprintf(arquivoSaida, "AporteFinanceiro: %.2f\n", novoValorAporte);
 
-                cnpjEncontrado = 1; // Indica que o CNPJ alvo foi encontrado
+                cnpjEncontrado = 1;
 
-                // Marca as próximas 2 linhas para serem ignoradas
                 ignorarLinhas = 1;
             } else {
-                // Se não é o CNPJ alvo, apenas copia a linha para o arquivo de saída
                 fputs(linha, arquivoSaida);
             }
         } else {
-            // Se a linha não começa com "CNPJ: ", apenas copia para o arquivo de saída
             fputs(linha, arquivoSaida);
         }
     }
@@ -513,11 +504,9 @@ void alterarInformacoes(const char *cnpjAlvo, const double novoValorProducao, co
     fclose(arquivoEntrada);
     fclose(arquivoSaida);
 
-    // Se o CNPJ alvo não foi encontrado, remove o arquivo de saída
     if (!cnpjEncontrado) {
         remove(arquivoSaidaNome);
     } else {
-        // Renomeia o arquivo temporário para o nome original
         remove(arquivoEntradaNome);
         rename(arquivoSaidaNome, arquivoEntradaNome);
     }
@@ -532,7 +521,6 @@ void atualizarRelatorio(char procurarCNPJ[20], char caminhoArquivoRelatorio[100]
     // Criando uma instância da estrutura para armazenar os dados
     struct Industria relatorioIndustria;
 
-    // Verificando a existência do arquivo
     FILE *arquivoRelatorio = fopen(caminhoArquivoRelatorio, "r");
     if (arquivoRelatorio == NULL) {
         printf(RED "[!] - Relatorio nao foi encontrado.\n" RESET_COLOR);
@@ -636,11 +624,9 @@ void gerarRelatorio() {
 
     FILE *arquivoRelatorio = fopen(caminhoArquivoRelatorio, "r");
     if (arquivoRelatorio == NULL) {
-        // O arquivo não foi encontrado
         printf(RED "[!] - Relatorio para o CNPJ [%s] nao foi encontrado.\n" RESET_COLOR, procurarCNPJ);
         return;
     } else {
-        // O arquivo foi encontrado
         printf(GREEN "[!] - Arquivo encontrado.\n" RESET_COLOR);
         printf("\n");
     }
@@ -1063,8 +1049,6 @@ void excluirIndustria() {
         case 1:
             if (system(comando) == 0) {
                 printf(GREEN "[!] - Empresa excluida com sucesso!\n" RESET_COLOR);
-            } else {
-                printf(RED "[!] - Erro ao excluir a empresa.\n" RESET_COLOR);
             }
         case 2:
             printf("\n");
@@ -1096,8 +1080,6 @@ void excluirFuncionario(){
         case 1:
             if (system(comando) == 0) {
                 printf(GREEN "[!] - Funcionario excluido com sucesso!\n" RESET_COLOR);
-            } else {
-                printf(RED "[!] - Erro ao excluir o Funcionario.\n" RESET_COLOR);
             }
         case 2:
             printf("\n");
