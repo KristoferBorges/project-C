@@ -1,0 +1,11 @@
+Industria com maior producao:
+ Nome: Teste
+ Regiao: Sudeste
+ Producao: R$ 47182.00
+ Aporte Financeiro: R$ 31308.00
+Industria com menor producao:
+ Nome: Kristofer_LTDA
+ Regiao: SP
+ Producao: R$ 0.00
+ Aporte Financeiro: R$ 0.00
+Aporte financeiro semestral total: R$ 124564.00
