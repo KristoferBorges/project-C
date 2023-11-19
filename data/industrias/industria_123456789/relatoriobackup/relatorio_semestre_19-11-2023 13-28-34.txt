@@ -1,0 +1,14 @@
+[19-11-2023]
+Mês 1: R$ 1376
+Valor Gasto: R$ 882
+Mês 2: R$ 2290
+Valor Gasto: R$ 7783
+Mês 3: R$ 2399
+Valor Gasto: R$ 8153
+Mês 4: R$ 6401
+Valor Gasto: R$ 1985
+Mês 5: R$ 1126
+Valor Gasto: R$ 7523
+Mês 6: R$ 4272
+Valor Gasto: R$ 5261
+Descricao: Relatorio_gerado_pelo_sistema.

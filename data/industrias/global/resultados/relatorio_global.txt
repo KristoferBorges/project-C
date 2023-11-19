@@ -1,11 +1,11 @@
 Industria com maior producao:
- Nome: Teste
+ Nome: Navios_Ramires
  Regiao: Sudeste
- Producao: R$ 47182.00
- Aporte Financeiro: R$ 31308.00
+ Producao: R$ 31587.00
+ Aporte Financeiro: R$ 17864.00
 Industria com menor producao:
- Nome: Kristofer_LTDA
- Regiao: SP
- Producao: R$ 0.00
- Aporte Financeiro: R$ 0.00
-Aporte financeiro semestral total: R$ 124564.00
+ Nome: Bolos_LTDA
+ Regiao: Campos_Do_Jordao
+ Producao: R$ 24626.00
+ Aporte Financeiro: R$ 26680.00
+Aporte financeiro semestral total: R$ 44544.00
