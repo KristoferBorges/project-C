@@ -1,4 +1,5 @@
 # O trabalho foi desenvolvido pela a autoria dos seguintes integrantes:
+Kristofer Borges
 Ana Clara Aguiar do Nascimento 
 Diego Gomes
 Josefa da Conceição da Silva
